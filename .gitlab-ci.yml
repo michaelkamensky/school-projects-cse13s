@@ -7,6 +7,6 @@ stages:
 build-code:
   stage: build
   script:
-    - git clone "${CI_REPO}" ci
-    - cd ci
-    - python3 ci.py
+    - git clone "${CI_REPO}" ci && cd ci && python3 ci.py
+  rules:
+    - when: manual
