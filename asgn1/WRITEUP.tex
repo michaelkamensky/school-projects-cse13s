@@ -1,0 +1,37 @@
+\documentclass[11pt]{article} % Document type
+\usepackage{graphicx}
+\title{Assignment 1}
+\author{Michael Kamensky}
+\date{\today} % Sets the date to \today, or any date you specify
+\begin{document}\maketitle % Start the document
+\section{Images}
+This is fig2.pdf which shows all the random points ploted on a gragh points inside the circle are blue points outside are red.
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[height=3in,width=5in]{fig2.pdf}
+\caption{This fig2.pdf image}
+\end{center}
+\end{figure}
+
+This is fig3.pdf which shows 5 different Monte Carlo simulations and their range or error to pi.
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[height=3in,width=5in]{fig3.pdf}
+\caption{This fig3.pdf image}
+\end{center}
+\end{figure}
+\section{Unix Comands that were Used}
+\begin{itemize}
+  \item \textbf{bash}: wrote a script in bash as directed
+  \begin{itemize}
+     \item file redirection: to store intermidiate data
+     \item variables: to hold paramater values
+     \item if and test comands: to check if argument was passed
+     \item heredoc: used to write gnuplot script in file
+  \end{itemize}
+  \item \textbf{grep}: used -v to filter out the head row and -E with regular expression to filter in and out of circle data
+  \item \textbf{awk}: selects appropriate columns to use for data and caluclate the difference between the estimate of pi and set value for pi
+  \item \textbf{gnuplot}: can graph and create plots as needed for fig2.pdf and fig3.pdf
+\end{itemize}
+
+\end{document}
