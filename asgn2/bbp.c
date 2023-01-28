@@ -2,13 +2,14 @@
 
 #include <stdio.h>
 
-static int count3 = 0;
+static int count = 0;
 
 double pi_bbp(void) {
-
     double pi = 0.0;
     double last = 1.0;
     double k = 0.0;
+    count = 0;
+
     while ((last) > EPSILON) {
         int i;
         double res = 1.0;
@@ -19,12 +20,11 @@ double pi_bbp(void) {
                * ((4 / (8 * k + 1)) - (2 / (8 * k + 4)) - (1 / (8 * k + 5)) - (1 / (8 * k + 6)));
         pi += last;
         k += 1;
-        count3 += 1;
+        count += 1;
     }
-    /*printf("e called\n");*/
     return pi;
 }
 
 int pi_bbp_terms(void) {
-    return count3;
+    return count;
 }

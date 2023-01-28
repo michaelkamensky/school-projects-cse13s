@@ -1,7 +1,7 @@
 SHELL := /bin/sh
 CC = clang
-CFLAGS = -Wall -Wpedantic -Werror -Wextra
-objects = bbp.o  e.o  euler.o  madhava.o  mathlib-test.o  newton.o
+CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
+objects = bbp.o  e.o  euler.o  madhava.o  mathlib-test.o  newton.o viete.o
 
 all: mathlib-test
 
@@ -25,6 +25,10 @@ mathlib-test.o: mathlib-test.c
 
 newton.o: newton.c
 	$(CC) $(CFLAGS) -c newton.c
+
+viete.o: viete.c
+	$(CC) $(CFLAGS) -c viete.c
+
 
 clean:
 	rm -f mathlib-test $(objects) 
