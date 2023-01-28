@@ -17,6 +17,6 @@ double sqrt_newton(double x) {
     return y;
 }
 
-int sqrt_newtons_iters(void) {
+int sqrt_newton_iters(void) {
     return count;
 }

@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+int terms = 0;
+
 double pi_madhava(void) {
 
     static double total = 0.0;
@@ -20,7 +22,12 @@ double pi_madhava(void) {
         /*printf("last is %f\n", last);*/
         total += last;
         k += 1.0;
+        terms += 1;
     }
     /*printf("e called\n");*/
     return (sqrt_newton(12) * total);
+}
+
+int pi_madhava_terms(void) {
+    return terms;
 }
