@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "mathlib.h"
-#include "newton.c"
-#include "e.c"
-#include "madhava.c"
-#include "euler.c"
-#include "bbp.c"
 
 int
 main (int argc, char **argv){
@@ -25,7 +20,7 @@ main (int argc, char **argv){
            case 'e':
            e();
            break;
-        defult:
+        default:
            printf("option not understood");
            exit(-1);
         }
