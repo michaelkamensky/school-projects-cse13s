@@ -1,4 +1,5 @@
 #include "mathlib.h"
+
 #include <stdio.h>
 
 static int count = 0;
@@ -15,12 +16,11 @@ double pi_euler(void) {
         k += 1;
         count += 1;
 #ifdef TRACE_PI
-	if (count % 100000 == 0) {
+        if (count % 100000 == 0) {
             double tot = sqrt_newton(6 * pi);
             printf("%d %16.15lf\n", count, tot);
         }
 #endif
-
     }
     return sqrt_newton(6 * pi);
 }
