@@ -15,6 +15,9 @@ double e(void) {
         e += last;
         k += 1.0;
         iterations += 1;
+#ifdef TRACE_E
+	printf("%d %16.15lf\n", iterations, e);
+#endif
     }
     return e;
 }

@@ -19,6 +19,9 @@ double pi_viete(void) {
         two_over_pi *= last;
         pi = 2.0 / two_over_pi;
         count += 1;
+#ifdef TRACE_PI
+        printf("%d %16.15lf\n", count, pi);
+#endif
     }
     return pi;
 }

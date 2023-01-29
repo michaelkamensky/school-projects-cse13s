@@ -23,8 +23,11 @@ double pi_madhava(void) {
         total += last;
         k += 1.0;
         terms += 1;
+#ifdef TRACE_PI
+        double pi = (sqrt_newton(12) * total);
+        printf("%d %16.15lf\n", terms, pi);
+#endif
     }
-    /*printf("e called\n");*/
     return (sqrt_newton(12) * total);
 }
 

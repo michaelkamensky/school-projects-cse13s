@@ -21,6 +21,9 @@ double pi_bbp(void) {
         pi += last;
         k += 1;
         count += 1;
+#ifdef TRACE_PI
+        printf("%d %16.15lf\n", count, pi);
+#endif
     }
     return pi;
 }

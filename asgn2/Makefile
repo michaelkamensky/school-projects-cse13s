@@ -1,6 +1,7 @@
 SHELL := /bin/sh
 CC = clang
-CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
+CFLAGS = -Wall -Wpedantic -Werror -Wextra -g $(MYCFLAGS) 
+#CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
 objects = bbp.o  e.o  euler.o  madhava.o  mathlib-test.o  newton.o viete.o
 
 all: mathlib-test

@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-int count = 0;
+static int count = 0;
 
 double sqrt_newton(double x) {
     double z = 0.0;
@@ -13,6 +13,9 @@ double sqrt_newton(double x) {
         z = y;
         y = 0.5 * (z + x / z);
         count += 1;
+#ifdef TRACE_SQRT
+        printf("%d %16.15lf\n", count, y);
+#endif
     }
     return y;
 }

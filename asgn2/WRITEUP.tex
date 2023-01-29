@@ -1,0 +1,62 @@
+\documentclass[11pt]{article} % Document type
+\usepackage{graphicx}
+\usepackage{float}
+\title{Assignment 2}
+\author{Michael Kamensky}
+\date{\today} % Sets the date to \today, or any date you specify
+\begin{document}\maketitle % Start the document
+\section{Running mathlib-test}
+Here is an example of runnig my tests:
+
+\begin{verbatim} 
+mkamensk@vera:~/cse13s/asgn2$ ./mathlib-test -a -s
+e() = 2.718281828459046, M_E = 2.718281828459045, diff = 0.000000000000000
+e term = 17
+pi_bbp() = 3.141592653589793, M_PI = 3.141592653589793, diff = 0.000000000000000
+pi_bbp() term = 11
+pi_viete() = 3.141592653589793, M_PI = 3.141592653589793, diff = -0.000000000000000
+pi_viete() factors = 25
+pi_euler() = 3.141592558095903, M_PI = 3.141592653589793, diff = -0.000000095493891
+pi_euler() terms = 10000000
+pi_madhava() = 3.141592653589800, M_PI = 3.141592653589793, diff = 0.000000000000007
+pi_madhava() terms = 27
+sqrt_newton() = 1.414213562373095, M_SQRT2 = 1.414213562373095, diff = -0.000000000000000
+sqrt_newton() iteration = 6
+\end{verbatim}
+\section{Calculation of PI}
+These three methods converge really quickly to desired value
+\begin{figure}[H]
+\begin{center}
+\includegraphics[height=3in,width=5in]{pi.pdf}
+\caption{This is Viete BBp and Madhava Pi Calculation Error}
+\end{center}
+\end{figure}
+
+But Euler Pi calculation converges really slowely
+\begin{figure}[H]
+\begin{center}
+\includegraphics[height=3in,width=5in]{pi_euler.pdf}
+\caption{This is Euler Pi Calculation Error}
+\end{center}
+\end{figure}
+
+\section{Calculation of E}
+Shows the error clauclation of e()
+\begin{figure}[H]
+\begin{center}
+\includegraphics[height=3in,width=5in]{e.pdf}
+\caption{This is Euler E Calculation Error}
+\end{center}
+\end{figure}
+
+\section{Calculation of Square Root of Two}
+Shows the error clauclation of Sqrt 2
+\begin{figure}[H]
+\begin{center}
+\includegraphics[height=3in,width=5in]{sqrt.pdf}
+\caption{This is Square Root of Two Newton Calculation Error}
+\end{center}
+\end{figure}
+
+
+\end{document}
