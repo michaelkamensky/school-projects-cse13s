@@ -35,7 +35,10 @@ OPTIONS
     -n Runs Newton-Raphson square root approximation test
     -a runs all tests
 ```
-
+To generate the graph data and pdf files run plot.sh:
+```
+./plot.sh
+```
 
 ## Support
 Please contact mkamensk@ucsc.edu if you need help or provide feedback for this project
