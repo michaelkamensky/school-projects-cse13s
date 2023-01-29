@@ -1,6 +1,8 @@
 \documentclass[11pt]{article} % Document type
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{geometry}
+\geometry{legalpaper, margin=1in}
 \title{Assignment 2}
 \author{Michael Kamensky}
 \date{\today} % Sets the date to \today, or any date you specify
@@ -28,7 +30,7 @@ These three methods converge really quickly to desired value
 \begin{figure}[H]
 \begin{center}
 \includegraphics[height=3in,width=5in]{pi.pdf}
-\caption{This is Viete BBp and Madhava Pi Calculation Error}
+\caption{This is Viete, BBP and Madhava Pi Calculation Error}
 \end{center}
 \end{figure}
 
@@ -58,5 +60,9 @@ Shows the error clauclation of Sqrt 2
 \end{center}
 \end{figure}
 
-
+\section{Analysis}
+Calculation of pi, BBP algorithm seems the best since it converges after 11 terms.
+Madhava and Vietes' algorithms number of terms were pretty much the same. However, the number of terms does not mean time effcient, becasue of different term calculation cost.
+Eulers method was not only the slowest but was the least accurate.
+If one wants a better approximation for either pi, e, or sqrt you can lower the value of Epsilon so that the algorithms run more iterations.
 \end{document}
