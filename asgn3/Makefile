@@ -1,0 +1,41 @@
+SHELL := /bin/sh
+CC = clang
+#CFLAGS = -Wall -Wpedantic -Werror -Wextra -g $(MYCFLAGS) 
+CFLAGS = -g $(MYCFLAGS)
+#CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
+objects = batcher.o  shell.o  heap.o  quick.o  set.o  stats.o sorting.o
+
+
+all: sorting
+
+sorting: $(objects)
+	$(CC) $(CFLAGS) -o $@ $(objects)
+
+batcher.o: batcher.c
+	$(CC) $(CFLAGS) -c $<
+
+shell.o: shell.c
+	$(CC) $(CFLAGS) -c $<
+
+heap.o: heap.c
+	$(CC) $(CFLAGS) -c $<
+
+quick.o: quick.c
+	$(CC) $(CFLAGS) -c $<
+
+set.o: set.c
+	$(CC) $(CFLAGS) -c $<
+
+stats.o: stats.c
+	$(CC) $(CFLAGS) -c $<
+
+sorting.o: sorting.c
+	$(CC) $(CFLAGS) -c $<
+
+
+clean:
+	rm -f sorting $(objects) 
+
+format:
+	clang-format -i -style=file *.[ch]
+
