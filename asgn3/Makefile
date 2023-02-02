@@ -14,7 +14,7 @@ sorting: $(objects)
 batcher.o: batcher.c
 	$(CC) $(CFLAGS) -c $<
 
-shell.o: shell.c
+shell.o: shell.c gaps.h
 	$(CC) $(CFLAGS) -c $<
 
 heap.o: heap.c
@@ -32,9 +32,11 @@ stats.o: stats.c
 sorting.o: sorting.c
 	$(CC) $(CFLAGS) -c $<
 
+gaps.h: gaps.h.py
+	./gaps.h.py > $@
 
 clean:
-	rm -f sorting $(objects) 
+	rm -f sorting $(objects) gaps.h
 
 format:
 	clang-format -i -style=file *.[ch]
