@@ -1,11 +1,11 @@
 
+#include "quick.h"
+#include "stats.h"
+
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <inttypes.h>
-
-#include "stats.h"
-#include "quick.h"
 
 void usage(char *exec) {
     fprintf(stderr,
@@ -27,11 +27,11 @@ void usage(char *exec) {
         exec);
 }
 
-uint32_t* random_arr_gen(uint32_t size) {
+uint32_t *random_arr_gen(uint32_t size) {
     uint32_t *array;
     array = malloc(sizeof(uint32_t) * size);
     uint32_t i;
-    for (i = 0; i < size; i++){
+    for (i = 0; i < size; i++) {
         uint32_t r = random();
         r = r & 0x3fffffff;
         array[i] = r;
@@ -45,14 +45,12 @@ void print_array(uint32_t *arr, uint32_t size, uint32_t p_size) {
     }
     for (int i = 0; i < p_size; i++) {
         printf("%13" PRIu32, arr[i]);
-	    if (i % 5 == 4) {
+        if (i % 5 == 4) {
             printf("\n");
-	    }
+        }
     }
     printf("\n");
 }
-
-
 
 int main(int argc, char **argv) {
     int c;
@@ -61,40 +59,37 @@ int main(int argc, char **argv) {
     uint32_t p_size = 100;
     Stats stats = {};
     int do_quick_sort = 0;
-    
+
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
         case 'n':
-            size =
-            (uint32_t)strtoul(optarg, NULL, 10); /* Size of Array */
+            size = (uint32_t) strtoul(optarg, NULL, 10); /* Size of Array */
             break;
-        case 'q': 
-	    //quick_sort(&stats, array, 6);
-	    do_quick_sort = 1;
-	    break;
+        case 'q':
+            //quick_sort(&stats, array, 6);
+            do_quick_sort = 1;
+            break;
         case 'r':
-            seed = (uint32_t)strtoul(optarg, NULL, 10); /* Deterministic seed */
+            seed = (uint32_t) strtoul(optarg, NULL, 10); /* Deterministic seed */
             break;
-        case 'p':
-            p_size = (uint32_t)strtoul(optarg, NULL, 10);
-            break;
+        case 'p': p_size = (uint32_t) strtoul(optarg, NULL, 10); break;
         default: usage(argv[0]); exit(-1);
         }
     }
 //#define TEST
 #ifdef TEST
-    uint32_t array[10] = {10, 2, 3, 4, 7, 5, 1, 6, 8, 9};
+    uint32_t array[10] = { 10, 2, 3, 4, 7, 5, 1, 6, 8, 9 };
     size = 10;
 #else
     srandom(seed);
     uint32_t *array = random_arr_gen(size);
 #endif
     if (do_quick_sort) {
-	printf("Before sort\n");
-	print_array(array, size, p_size);
+        printf("Before sort\n");
+        print_array(array, size, p_size);
         quick_sort(&stats, array, size);
-        printf("Quick Sort, %u elements, %lu moves, %lu compares\n", 
-                size, stats.moves, stats.compares);
+        printf("Quick Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
+            stats.compares);
         print_array(array, size, p_size);
     }
     return 0;
