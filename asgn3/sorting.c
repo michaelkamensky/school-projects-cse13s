@@ -1,5 +1,6 @@
 
 #include "quick.h"
+#include "shell.h"
 #include "stats.h"
 
 #include <inttypes.h>
@@ -59,6 +60,7 @@ int main(int argc, char **argv) {
     uint32_t p_size = 100;
     Stats stats = {};
     int do_quick_sort = 0;
+    int do_shell_sort = 0;
 
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
@@ -68,6 +70,9 @@ int main(int argc, char **argv) {
         case 'q':
             //quick_sort(&stats, array, 6);
             do_quick_sort = 1;
+            break;
+        case 's':
+            do_shell_sort = 1;
             break;
         case 'r':
             seed = (uint32_t) strtoul(optarg, NULL, 10); /* Deterministic seed */
@@ -91,6 +96,16 @@ int main(int argc, char **argv) {
         printf("Quick Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
+        reset(&stats);
     }
+    if (do_shell_sort) {
+        printf("Before sort\n");
+        print_array(array, size, p_size);
+        shell_sort(&stats, array, size);
+        printf("Shell Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
+            stats.compares);
+        print_array(array, size, p_size);
+    }
+
     return 0;
 }
