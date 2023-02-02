@@ -9,7 +9,7 @@ objects = batcher.o  shell.o  heap.o  quick.o  set.o  stats.o sorting.o
 all: sorting
 
 sorting: $(objects)
-	$(CC) $(CFLAGS) -o $@ $(objects)
+	$(CC) $(CFLAGS) -o $@ $(objects) -lm
 
 batcher.o: batcher.c
 	$(CC) $(CFLAGS) -c $<

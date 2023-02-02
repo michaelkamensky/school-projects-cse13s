@@ -2,6 +2,7 @@
 #include "quick.h"
 #include "shell.h"
 #include "stats.h"
+#include "heap.h"
 
 #include <inttypes.h>
 #include <stdio.h>
