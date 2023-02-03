@@ -62,6 +62,7 @@ int main(int argc, char **argv) {
     Stats stats = {};
     int do_quick_sort = 0;
     int do_shell_sort = 0;
+    int do_heap_sort = 0;
 
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
@@ -75,6 +76,9 @@ int main(int argc, char **argv) {
         case 's':
             do_shell_sort = 1;
             break;
+        case 'h':
+            do_heap_sort = 1;
+            break;
         case 'r':
             seed = (uint32_t) strtoul(optarg, NULL, 10); /* Deterministic seed */
             break;
@@ -82,7 +86,7 @@ int main(int argc, char **argv) {
         default: usage(argv[0]); exit(-1);
         }
     }
-//#define TEST
+#define TEST
 #ifdef TEST
     uint32_t array[10] = { 10, 2, 3, 4, 7, 5, 1, 6, 8, 9 };
     size = 10;
@@ -90,6 +94,7 @@ int main(int argc, char **argv) {
     srandom(seed);
     uint32_t *array = random_arr_gen(size);
 #endif
+    reset(&stats);
     if (do_quick_sort) {
         printf("Before sort\n");
         print_array(array, size, p_size);
@@ -104,6 +109,14 @@ int main(int argc, char **argv) {
         print_array(array, size, p_size);
         shell_sort(&stats, array, size);
         printf("Shell Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
+            stats.compares);
+        print_array(array, size, p_size);
+    }
+    if (do_heap_sort) {
+        printf("Before sort\n");
+        print_array(array, size, p_size);
+        heap_sort(&stats, array, size);
+        printf("Heap Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
     }

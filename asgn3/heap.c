@@ -15,7 +15,7 @@ void fix_heap(Stats *stats,uint32_t *arr, uint32_t first, uint32_t last) {
     int found = 0;
     uint32_t mother = first;
     uint32_t great = max_child(stats, arr, mother, last);
-    while (mother <= floor(last/2) && !found ) {
+    while ((mother <= last/2) && (!found)) {
         if (arr[mother - 1] < arr[great -1]) {
             swap(stats, &arr[mother - 1], &arr[great - 1]);
             mother = great;
@@ -29,7 +29,7 @@ void fix_heap(Stats *stats,uint32_t *arr, uint32_t first, uint32_t last) {
 
 void build_heap(Stats *stats, uint32_t *arr, uint32_t first, uint32_t last) {
     uint32_t father;
-    for (father = floor(last/2); father < first - 1; --father) {
+    for (father = last/2; father > first - 1; father--) {
         fix_heap(stats, arr, father, last);
     }
 }
@@ -39,8 +39,8 @@ void heap_sort(Stats *stats, uint32_t *arr, uint32_t n) {
     uint32_t last = n;
     build_heap(stats, arr, first, last);
     uint32_t leaf;
-    for (leaf = last; leaf < first; --leaf) {
-        swap(stats, &arr[first - 1], &arr[last - 1]);
+    for (leaf = last; leaf > first; leaf--) {
+        swap(stats, &arr[first - 1], &arr[leaf - 1]);
         fix_heap(stats, arr, first, leaf -1);
     }
 }
