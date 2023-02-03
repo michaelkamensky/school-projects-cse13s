@@ -1,8 +1,8 @@
-
 #include "quick.h"
 #include "shell.h"
 #include "stats.h"
 #include "heap.h"
+#include "batcher.h"
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -63,6 +63,7 @@ int main(int argc, char **argv) {
     int do_quick_sort = 0;
     int do_shell_sort = 0;
     int do_heap_sort = 0;
+    int do_batcher_sort = 0;
 
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
@@ -78,6 +79,9 @@ int main(int argc, char **argv) {
             break;
         case 'h':
             do_heap_sort = 1;
+            break;
+        case 'b':
+            do_batcher_sort = 1;
             break;
         case 'r':
             seed = (uint32_t) strtoul(optarg, NULL, 10); /* Deterministic seed */
@@ -117,6 +121,14 @@ int main(int argc, char **argv) {
         print_array(array, size, p_size);
         heap_sort(&stats, array, size);
         printf("Heap Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
+            stats.compares);
+        print_array(array, size, p_size);
+    }
+    if (do_batcher_sort) {
+        printf("Before sort\n");
+        print_array(array, size, p_size);
+        batcher_sort(&stats, array, size);
+        printf("batcher Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
     }
