@@ -5,7 +5,7 @@
 uint32_t max_child(Stats *stats, uint32_t *arr, uint32_t first, uint32_t last) {
     uint32_t left = 2 * first;
     uint32_t right = left + 1;
-    if (right <= last && arr[right -1] > arr[left -1]) {
+    if (right <= last && (cmp(stats, arr[right -1], arr[left -1]) == 1)) {
         return right;
     }
     return left;
@@ -16,7 +16,7 @@ void fix_heap(Stats *stats,uint32_t *arr, uint32_t first, uint32_t last) {
     uint32_t mother = first;
     uint32_t great = max_child(stats, arr, mother, last);
     while ((mother <= last/2) && (!found)) {
-        if (arr[mother - 1] < arr[great -1]) {
+        if (cmp(stats, arr[mother - 1], arr[great -1]) == -1) {
             swap(stats, &arr[mother - 1], &arr[great - 1]);
             mother = great;
             great = max_child(stats, arr, mother, last);
