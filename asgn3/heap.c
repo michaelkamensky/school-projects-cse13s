@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-uint32_t max_child(Stats *stats, uint32_t *arr, uint32_t first, uint32_t last) {
+static uint32_t max_child(Stats *stats, uint32_t *arr, uint32_t first, uint32_t last) {
     uint32_t left = 2 * first;
     uint32_t right = left + 1;
     if (right <= last && (cmp(stats, arr[right -1], arr[left -1]) == 1)) {
@@ -11,7 +11,7 @@ uint32_t max_child(Stats *stats, uint32_t *arr, uint32_t first, uint32_t last) {
     return left;
 }
 
-void fix_heap(Stats *stats,uint32_t *arr, uint32_t first, uint32_t last) {
+static void fix_heap(Stats *stats,uint32_t *arr, uint32_t first, uint32_t last) {
     int found = 0;
     uint32_t mother = first;
     uint32_t great = max_child(stats, arr, mother, last);
@@ -27,7 +27,7 @@ void fix_heap(Stats *stats,uint32_t *arr, uint32_t first, uint32_t last) {
     } 
 }
 
-void build_heap(Stats *stats, uint32_t *arr, uint32_t first, uint32_t last) {
+static void build_heap(Stats *stats, uint32_t *arr, uint32_t first, uint32_t last) {
     uint32_t father;
     for (father = last/2; father > first - 1; father--) {
         fix_heap(stats, arr, father, last);

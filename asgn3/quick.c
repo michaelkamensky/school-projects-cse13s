@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-int partition(Stats *stats, uint32_t *arr, uint32_t lo, uint32_t hi) {
+static int partition(Stats *stats, uint32_t *arr, uint32_t lo, uint32_t hi) {
     uint32_t i = lo - 1;
     uint32_t j;
     for (j = lo; j < hi; j++) {
@@ -17,7 +17,7 @@ int partition(Stats *stats, uint32_t *arr, uint32_t lo, uint32_t hi) {
     return i + 1;
 }
 
-void quick_sorter(Stats *stats, uint32_t *arr, uint32_t lo, uint32_t hi) {
+static void quick_sorter(Stats *stats, uint32_t *arr, uint32_t lo, uint32_t hi) {
     if (lo < hi) {
         uint32_t p = partition(stats, arr, lo, hi);
         quick_sorter(stats, arr, lo, p - 1);
