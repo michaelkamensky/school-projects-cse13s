@@ -1,0 +1,41 @@
+#include "set.h"
+#include <stdio.h>
+
+Set set_empty(void) {
+    return 0;
+}
+
+Set set_universal(void) {
+    return 0XFFFFFFFF;
+}
+
+Set set_insert(Set s, uint8_t x) {
+    Set new_s = s | x<<1;
+    return new_s;
+}
+
+Set set_remove(Set s, uint8_t x) {
+    return s & ~(x<<1);
+}
+
+bool set_member(Set s, uint8_t x) {
+    if (s & (x<<1)) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+Set set_union(Set s, Set t) {
+    return s | t;
+}
+
+Set set_intersect(Set s, Set t) {
+    return s & t;
+}
+
+Set set_difference(Set s, Set t) {
+    return s & ~(t);
+}
+
