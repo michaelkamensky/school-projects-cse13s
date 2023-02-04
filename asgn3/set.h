@@ -22,4 +22,6 @@ Set set_intersect(Set s, Set t);
 
 Set set_difference(Set s, Set t);
 
+Set set_complement(Set s);
+
 #endif
