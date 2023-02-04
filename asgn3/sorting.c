@@ -121,6 +121,7 @@ int main(int argc, char **argv) {
         printf("Quick Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
+        free(array);
     }
     if (set_member(options, SHELL_SORT_ENABLED)) {
         reset(&stats);
@@ -132,6 +133,7 @@ int main(int argc, char **argv) {
         printf("Shell Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
+        free(array);
     }
     if (set_member(options, HEAP_SORT_ENABLED)) {
         reset(&stats);
@@ -143,6 +145,7 @@ int main(int argc, char **argv) {
         printf("Heap Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
+        free(array);
     }
     if (set_member(options, BATCHER_SORT_ENABLED)) {
         reset(&stats);
@@ -154,7 +157,9 @@ int main(int argc, char **argv) {
         printf("Batcher Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
+        free(array);
     }
 
+    free(array0);
     return 0;
 }
