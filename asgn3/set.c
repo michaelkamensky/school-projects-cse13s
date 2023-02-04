@@ -1,4 +1,5 @@
 #include "set.h"
+
 #include <stdio.h>
 
 Set set_empty(void) {
@@ -10,19 +11,18 @@ Set set_universal(void) {
 }
 
 Set set_insert(Set s, uint8_t x) {
-    Set new_s = s | 1<<x;
+    Set new_s = s | 1 << x;
     return new_s;
 }
 
 Set set_remove(Set s, uint8_t x) {
-    return s & ~(1<<x);
+    return s & ~(1 << x);
 }
 
 bool set_member(Set s, uint8_t x) {
-    if (s & (1<<x)) {
+    if (s & (1 << x)) {
         return 1;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -38,4 +38,3 @@ Set set_intersect(Set s, Set t) {
 Set set_difference(Set s, Set t) {
     return s & ~(t);
 }
-

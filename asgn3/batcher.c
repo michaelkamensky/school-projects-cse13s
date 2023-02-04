@@ -1,11 +1,12 @@
 #include "batcher.h"
-#include <stdio.h>
+
 #include <math.h>
+#include <stdio.h>
 
 int bit_length(uint32_t val) {
     int i;
     for (i = 31; i >= 0; i--) {
-        if (val & (1<<i)) {
+        if (val & (1 << i)) {
             return i + 1;
         }
     }
@@ -41,7 +42,7 @@ void batcher_sort(Stats *stats, uint32_t *arr, uint32_t n) {
             uint32_t i;
             for (i = 0; i < (n - d); i++) {
                 if ((i & p) == r) {
-                    comparator(stats, arr, i, i+d);
+                    comparator(stats, arr, i, i + d);
                 }
             }
             d = q - p;

@@ -1,13 +1,13 @@
 #include "set.h"
+
 #include <stdio.h>
 
 void set_print(Set s) {
     int i;
-    for(i = 31; i >= 0; i--) {
+    for (i = 31; i >= 0; i--) {
         if (s & (1 << i)) {
             printf("1");
-        }
-        else{
+        } else {
             printf("0");
         }
     }
@@ -34,7 +34,7 @@ int main(void) {
     printf("set_member of s1 of 4 should be false\n");
     printf("the result is %d\n", set_member(s1, 4));
     printf("set_member of s of 4 should be true\n");
-    printf("the result is %d\n", set_member(s, 4));\
+    printf("the result is %d\n", set_member(s, 4));
     s1 = set_remove(s1, 15);
     printf("s1 = ");
     set_print(s1);

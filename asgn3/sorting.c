@@ -1,20 +1,20 @@
+#include "batcher.h"
+#include "heap.h"
 #include "quick.h"
+#include "set.h"
 #include "shell.h"
 #include "stats.h"
-#include "heap.h"
-#include "batcher.h"
-#include "set.h"
 
 #include <inttypes.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-#define HEAP_SORT_ENABLED 1
+#define HEAP_SORT_ENABLED    1
 #define BATCHER_SORT_ENABLED 2
-#define SHELL_SORT_ENABLED 3
-#define QUICK_SORT_ENABLED 4
+#define SHELL_SORT_ENABLED   3
+#define QUICK_SORT_ENABLED   4
 
 void usage(char *exec) {
     fprintf(stderr,
@@ -32,7 +32,8 @@ void usage(char *exec) {
         "    -q : Enables Quicksort\n"
         "    -r seed : Set the random seed to seed. The default seed is 13371453\n"
         "    -n size : Set the array size to size. The default size is 100\n"
-        "    -p elements : Print out elements number of elements from the array. The default is 100\n"
+        "    -p elements : Print out elements number of elements from the array. The default is "
+        "100\n"
         "    -H display program help and usage.\n",
         exec);
 }
@@ -69,25 +70,17 @@ int main(int argc, char **argv) {
     uint32_t p_size = 100;
     Stats stats;
     Set options;
-    options = set_empty(); 
+    options = set_empty();
 
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
         case 'n':
             size = (uint32_t) strtoul(optarg, NULL, 10); /* Size of Array */
             break;
-        case 'q':
-            options = set_insert(options, QUICK_SORT_ENABLED);
-            break;
-        case 's':
-            options = set_insert(options, SHELL_SORT_ENABLED);
-            break;
-        case 'h':
-            options = set_insert(options, HEAP_SORT_ENABLED);
-            break;
-        case 'b':
-            options = set_insert(options, BATCHER_SORT_ENABLED);
-            break;
+        case 'q': options = set_insert(options, QUICK_SORT_ENABLED); break;
+        case 's': options = set_insert(options, SHELL_SORT_ENABLED); break;
+        case 'h': options = set_insert(options, HEAP_SORT_ENABLED); break;
+        case 'b': options = set_insert(options, BATCHER_SORT_ENABLED); break;
         case 'a':
             options = set_insert(options, QUICK_SORT_ENABLED);
             options = set_insert(options, SHELL_SORT_ENABLED);
@@ -108,7 +101,7 @@ int main(int argc, char **argv) {
 #else
     srandom(seed);
     uint32_t *array0 = random_arr_gen(size);
-    uint32_t *array; 
+    uint32_t *array;
 #endif
     reset(&stats);
     if (set_member(options, QUICK_SORT_ENABLED)) {
@@ -142,8 +135,8 @@ int main(int argc, char **argv) {
         //printf("Before sort\n");
         //print_array(array, size, p_size);
         heap_sort(&stats, array, size);
-        printf("Heap Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
-            stats.compares);
+        printf(
+            "Heap Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves, stats.compares);
         print_array(array, size, p_size);
         free(array);
     }
