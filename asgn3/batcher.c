@@ -13,7 +13,8 @@ int bit_length(uint32_t val) {
 }
 
 static void comparator(Stats *stats, uint32_t *arr, uint32_t x, uint32_t y) {
-    if (arr[x] > arr[y]) {
+    //if (arr[x] > arr[y]) {
+    if (cmp(stats, arr[x], arr[y]) == 1) {
         swap(stats, &arr[x], &arr[y]);
     }
 }
