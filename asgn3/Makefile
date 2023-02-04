@@ -43,7 +43,7 @@ gaps.h: gaps.h.py
 	./gaps.h.py > $@
 
 clean:
-	rm -f sorting $(objects) gaps.h set_ut
+	rm -f sorting $(objects) gaps.h set_ut set_ut.o
 
 format:
 	clang-format -i -style=file *.[ch]
