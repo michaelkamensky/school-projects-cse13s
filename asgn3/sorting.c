@@ -3,11 +3,18 @@
 #include "stats.h"
 #include "heap.h"
 #include "batcher.h"
+#include "set.h"
 
 #include <inttypes.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#define HEAP_SORT_ENABLED 1
+#define BATCHER_SORT_ENABLED 2
+#define SHELL_SORT_ENABLED 3
+#define QUICK_SORT_ENABLED 4
 
 void usage(char *exec) {
     fprintf(stderr,
@@ -61,10 +68,8 @@ int main(int argc, char **argv) {
     uint32_t size = 100;
     uint32_t p_size = 100;
     Stats stats = {};
-    int do_quick_sort = 0;
-    int do_shell_sort = 0;
-    int do_heap_sort = 0;
-    int do_batcher_sort = 0;
+    Set options;
+    options = set_empty(); 
 
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
@@ -72,17 +77,22 @@ int main(int argc, char **argv) {
             size = (uint32_t) strtoul(optarg, NULL, 10); /* Size of Array */
             break;
         case 'q':
-            //quick_sort(&stats, array, 6);
-            do_quick_sort = 1;
+            options = set_insert(options, QUICK_SORT_ENABLED);
             break;
         case 's':
-            do_shell_sort = 1;
+            options = set_insert(options, SHELL_SORT_ENABLED);
             break;
         case 'h':
-            do_heap_sort = 1;
+            options = set_insert(options, HEAP_SORT_ENABLED);
             break;
         case 'b':
-            do_batcher_sort = 1;
+            options = set_insert(options, BATCHER_SORT_ENABLED);
+            break;
+        case 'a':
+            options = set_insert(options, QUICK_SORT_ENABLED);
+            options = set_insert(options, SHELL_SORT_ENABLED);
+            options = set_insert(options, HEAP_SORT_ENABLED);
+            options = set_insert(options, BATCHER_SORT_ENABLED);
             break;
         case 'r':
             seed = (uint32_t) strtoul(optarg, NULL, 10); /* Deterministic seed */
@@ -91,45 +101,54 @@ int main(int argc, char **argv) {
         default: usage(argv[0]); exit(-1);
         }
     }
-#define TEST
+//#define TEST
 #ifdef TEST
     uint32_t array[10] = { 10, 2, 3, 4, 7, 5, 1, 6, 8, 9 };
     size = 10;
 #else
     srandom(seed);
-    uint32_t *array = random_arr_gen(size);
+    uint32_t *array0 = random_arr_gen(size);
+    uint32_t *array; 
 #endif
     reset(&stats);
-    if (do_quick_sort) {
-        printf("Before sort\n");
-        print_array(array, size, p_size);
+    if (set_member(options, QUICK_SORT_ENABLED)) {
+        array = malloc(sizeof(uint32_t) * size);
+        memcpy(array, array0, sizeof(uint32_t) * size);
+        //printf("Before sort\n");
+        //print_array(array, size, p_size);
         quick_sort(&stats, array, size);
         printf("Quick Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
         reset(&stats);
     }
-    if (do_shell_sort) {
-        printf("Before sort\n");
-        print_array(array, size, p_size);
+    if (set_member(options, SHELL_SORT_ENABLED)) {
+        array = malloc(sizeof(uint32_t) * size);
+        memcpy(array, array0, sizeof(uint32_t) * size);
+        //printf("Before sort\n");
+        //print_array(array, size, p_size);
         shell_sort(&stats, array, size);
         printf("Shell Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
     }
-    if (do_heap_sort) {
-        printf("Before sort\n");
-        print_array(array, size, p_size);
+    if (set_member(options, HEAP_SORT_ENABLED)) {
+        array = malloc(sizeof(uint32_t) * size);
+        memcpy(array, array0, sizeof(uint32_t) * size);
+        //printf("Before sort\n");
+        //print_array(array, size, p_size);
         heap_sort(&stats, array, size);
         printf("Heap Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
     }
-    if (do_batcher_sort) {
-        printf("Before sort\n");
-        print_array(array, size, p_size);
+    if (set_member(options, BATCHER_SORT_ENABLED)) {
+        array = malloc(sizeof(uint32_t) * size);
+        memcpy(array, array0, sizeof(uint32_t) * size);
+        //printf("Before sort\n");
+        //print_array(array, size, p_size);
         batcher_sort(&stats, array, size);
-        printf("batcher Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
+        printf("Batcher Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
     }
