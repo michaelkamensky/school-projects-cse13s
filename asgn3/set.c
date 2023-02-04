@@ -10,16 +10,16 @@ Set set_universal(void) {
 }
 
 Set set_insert(Set s, uint8_t x) {
-    Set new_s = s | x<<1;
+    Set new_s = s | 1<<x;
     return new_s;
 }
 
 Set set_remove(Set s, uint8_t x) {
-    return s & ~(x<<1);
+    return s & ~(1<<x);
 }
 
 bool set_member(Set s, uint8_t x) {
-    if (s & (x<<1)) {
+    if (s & (1<<x)) {
         return 1;
     }
     else {
