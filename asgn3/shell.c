@@ -5,9 +5,9 @@
 #include <stdio.h>
 
 void shell_sort(Stats *stats, uint32_t *arr, uint32_t length) {
-    int g;
+    uint32_t g;
     for (g = 0; g <= GAPS; ++g) {
-        int i;
+        uint32_t i;
         for (i = g; i < length; ++i) {
             uint32_t j = i;
             uint32_t temp = arr[i];

@@ -1,7 +1,8 @@
 SHELL := /bin/sh
 CC = clang
-#CFLAGS = -Wall -Wpedantic -Werror -Wextra -g $(MYCFLAGS) 
-CFLAGS = -g $(MYCFLAGS)
+#CC = gcc
+CFLAGS = -Wall -Wpedantic -Werror -Wextra -g -O2 $(MYCFLAGS) 
+#CFLAGS = -g $(MYCFLAGS)
 #CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
 objects = batcher.o  shell.o  heap.o  quick.o  set.o  stats.o sorting.o
 

@@ -53,7 +53,7 @@ void print_array(uint32_t *arr, uint32_t size, uint32_t p_size) {
     if (size < p_size) {
         p_size = size;
     }
-    for (int i = 0; i < p_size; i++) {
+    for (uint32_t i = 0; i < p_size; i++) {
         printf("%13" PRIu32, arr[i]);
         if (i % 5 == 4) {
             printf("\n");
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
     uint32_t seed = 13371453;
     uint32_t size = 100;
     uint32_t p_size = 100;
-    Stats stats = {};
+    Stats stats;
     Set options;
     options = set_empty(); 
 
@@ -112,6 +112,7 @@ int main(int argc, char **argv) {
 #endif
     reset(&stats);
     if (set_member(options, QUICK_SORT_ENABLED)) {
+        reset(&stats);
         array = malloc(sizeof(uint32_t) * size);
         memcpy(array, array0, sizeof(uint32_t) * size);
         //printf("Before sort\n");
@@ -120,9 +121,9 @@ int main(int argc, char **argv) {
         printf("Quick Sort, %u elements, %lu moves, %lu compares\n", size, stats.moves,
             stats.compares);
         print_array(array, size, p_size);
-        reset(&stats);
     }
     if (set_member(options, SHELL_SORT_ENABLED)) {
+        reset(&stats);
         array = malloc(sizeof(uint32_t) * size);
         memcpy(array, array0, sizeof(uint32_t) * size);
         //printf("Before sort\n");
@@ -133,6 +134,7 @@ int main(int argc, char **argv) {
         print_array(array, size, p_size);
     }
     if (set_member(options, HEAP_SORT_ENABLED)) {
+        reset(&stats);
         array = malloc(sizeof(uint32_t) * size);
         memcpy(array, array0, sizeof(uint32_t) * size);
         //printf("Before sort\n");
@@ -143,6 +145,7 @@ int main(int argc, char **argv) {
         print_array(array, size, p_size);
     }
     if (set_member(options, BATCHER_SORT_ENABLED)) {
+        reset(&stats);
         array = malloc(sizeof(uint32_t) * size);
         memcpy(array, array0, sizeof(uint32_t) * size);
         //printf("Before sort\n");

@@ -20,10 +20,10 @@ static void comparator(Stats *stats, uint32_t *arr, uint32_t x, uint32_t y) {
 }
 
 void batcher_sort(Stats *stats, uint32_t *arr, uint32_t n) {
-    int32_t t;
+    uint32_t t;
     int32_t p;
-    int32_t q;
-    int32_t r;
+    uint32_t q;
+    uint32_t r;
     int32_t d;
 
     if (n == 0) {
@@ -31,16 +31,14 @@ void batcher_sort(Stats *stats, uint32_t *arr, uint32_t n) {
     }
     t = bit_length(n);
     p = 1 << (t - 1);
-    int count = 0;
 
     while (p > 0) {
         q = 1 << (t - 1);
         r = 0;
         d = p;
-        count += 1;
 
         while (d > 0) {
-            int i;
+            uint32_t i;
             for (i = 0; i < (n - d); i++) {
                 if ((i & p) == r) {
                     comparator(stats, arr, i, i+d);
