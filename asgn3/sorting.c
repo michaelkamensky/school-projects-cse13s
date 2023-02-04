@@ -12,20 +12,21 @@
 void usage(char *exec) {
     fprintf(stderr,
         "SYNOPSIS\n"
-        "   Prints approximations for pi and e and compares it to libary values.\n"
+        "   Sorts a random array using four different sorting algorithms\n"
         "\n"
         "USAGE\n"
         "   %s [options] \n"
         "\n"
         "OPTIONS\n"
-        "    -h display program help and usage.\n"
-        "    -e runs Eulers apprximation of e\n"
-        "    -b runs Bailey-Borwein-Plouffe apprximation of pi\n"
-        "    -v runs Vietes apprximation of pi\n"
-        "    -m runs Madhava apprximation of pi\n"
-        "    -s sets stats mode shows the number iterations for each approximation\n"
-        "    -n Runs Newton-Raphson square root approximation test\n"
-        "    -a runs all tests\n",
+        "    -a : Employs all sorting algorithms\n"
+        "    -h : Enables Heap Sort\n"
+        "    -b : Enables Batcher Sort\n"
+        "    -s : Enables Shell Sort\n"
+        "    -q : Enables Quicksort\n"
+        "    -r seed : Set the random seed to seed. The default seed is 13371453\n"
+        "    -n size : Set the array size to size. The default size is 100\n"
+        "    -p elements : Print out elements number of elements from the array. The default is 100\n"
+        "    -H display program help and usage.\n",
         exec);
 }
 
