@@ -6,7 +6,7 @@
 struct Universe {
     uint32_t rows;
     uint32_t cols;
-    uint32_t **grid;
+    bool **grid;
     bool toroidal;
 };
 
@@ -15,9 +15,9 @@ Universe *uv_create(uint32_t rows, uint32_t cols, bool toroidal) {
     universe->rows = rows;
     universe->cols = cols;
     universe->toroidal = toroidal;
-    uint32_t **m = (uint32_t **) calloc(rows, sizeof(uint32_t *));
+    bool **m = (bool **) calloc(rows, sizeof(bool *));
     for (uint32_t r = 0; r < rows; r += 1) {
-        m[r] = (uint32_t *) calloc(cols, sizeof(uint32_t));
+        m[r] = (bool *) calloc(cols, sizeof(bool));
     }
     universe->grid = m;
     return universe;
