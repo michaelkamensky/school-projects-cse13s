@@ -10,7 +10,7 @@ objects = life.o universe.o
 all: life
 
 life: $(objects)
-	$(CC) $(CFLAGS) -o $@ $(objects)
+	$(CC) $(CFLAGS) -o $@ $(objects) -lncurses
 
 life.o: life.c
 	$(CC) $(CFLAGS) -c $<

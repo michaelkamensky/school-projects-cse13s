@@ -1,3 +1,5 @@
+#include "universe.h"
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +30,7 @@ void usage(char *exec) {
 
 int main(int argc, char **argv) {
     int c;
+    Universe *u = uv_create(2,5, false);
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
         case 'n':
@@ -41,6 +44,9 @@ int main(int argc, char **argv) {
         case 'b':
             break;
         case 'a':
+                printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
+            //print_universe(utest);
+
             break;
         case 'r':
             break;
