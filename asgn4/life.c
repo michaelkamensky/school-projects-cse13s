@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     int c;
     Universe *u = uv_create(20,25, false);
     uv_delete(u);
-    u = uv_create(0,0,false);
+    u = uv_create(0,0,true);
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
         case 'n':
@@ -87,12 +87,13 @@ int main(int argc, char **argv) {
             break;
         case 'a':
             printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
-            FILE *file = fopen("101.txt", "r");
+            FILE *file = fopen("test.txt", "r");
             printf("File pointer was created\n");
             uv_populate(u, file);
             fclose(file);
             uv_ncurses(u, 0);
-            uv_ncurses(u, 0);
+            uint32_t neigh = uv_census(u, 0, 0);
+            printf("the amount of neighbors is %d\n", neigh);
             //uv_live_cell(u, 19,24);
             //uv_live_cell(u, 0,0);
             //uv_dead_cell(u, 1,1);
