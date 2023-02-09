@@ -10,11 +10,9 @@ struct Universe {
     bool toroidal;
 };
 
-Universe *uv_create(uint32_t rows, uint32_t cols, bool toroidal) {
-    Universe *universe = (Universe *)calloc(1, sizeof(Universe));
+static Universe *__uv_create(Universe *universe, uint32_t rows, uint32_t cols) {
     universe->rows = rows;
     universe->cols = cols;
-    universe->toroidal = toroidal;
     bool **m = (bool **) calloc(rows, sizeof(bool *));
     for (uint32_t r = 0; r < rows; r += 1) {
         m[r] = (bool *) calloc(cols, sizeof(bool));
@@ -24,16 +22,27 @@ Universe *uv_create(uint32_t rows, uint32_t cols, bool toroidal) {
 
 }
 
-void uv_delete(Universe *u) {
-    for (uint32_t i = 0; i < u->cols; i++) {
+Universe *uv_create(uint32_t rows, uint32_t cols, bool toroidal) {
+    Universe *universe = (Universe *)calloc(1, sizeof(Universe));
+    universe->toroidal = toroidal;
+    return __uv_create(universe, rows, cols);
+}
+
+static void __uv_delete(Universe *u) {
+    for (uint32_t i = 0; i < u->rows; i++) {
         free(u->grid[i]);
         u->grid[i] = NULL;
     }
     free(u->grid);
     u->grid = NULL;
+    u->rows = 0;
+    u->cols = 0;
+}
+
+void uv_delete(Universe *u) {
+    __uv_delete(u);
     free(u);
     u = NULL;
-    return;
 }
 
 uint32_t uv_rows(struct Universe *u) {
@@ -66,18 +75,23 @@ bool uv_get_cell(Universe *u, uint32_t r, uint32_t c) {
 
 bool uv_populate(Universe *u, FILE *infile) {
    rewind(infile);
-   //int *rows = NULL;
-   //int *cols = NULL;
-   int first[1];
-   int second[1];
+   uint32_t first;
+   uint32_t second;
    int count = 0;
-   while (EOF != fscanf(infile, "%d %d\n", first, second)) {
-       printf("> %d %d\n", first[0], second[0]);
-       count += 1;
+   __uv_delete(u);
+   while (EOF != fscanf(infile, "%d %d\n", &first, &second)) {
+       if (count == 0) {
+           __uv_create(u, first, second);
+       } else {
+           if (first >= 0 && first <= u->rows && second >= 0 && second <= u->cols) {
+                uv_live_cell(u, first, second);
+           } else{
+                return false;
+           }
+       }
+    count += 1;
+
    }
-   printf("count is %d\n", count);
-   printf("temp print for *u %d\n", uv_rows(u));
-   fclose(infile);
    return true;
 }
 

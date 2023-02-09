@@ -5,6 +5,46 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ncurses.h>
+
+void uv_ncurses (Universe *u, uint32_t wait) {
+    initscr () ; // Initialize the screen .
+    curs_set ( FALSE ) ; // Hide the cursor .
+    uint32_t rows = uv_rows(u);
+    uint32_t cols = uv_cols(u);
+    clear();
+    for (uint32_t r = 0; r < rows; r++) {
+        for (uint32_t c = 0; c < cols; c++) {
+            bool b = uv_get_cell(u, r, c);
+            if (b) {
+                mvprintw(r, c, "x");
+            } else {
+                mvprintw(r, c, " ");
+            }
+
+        }
+    }
+    refresh();
+    if (wait != 0) {
+        sleep(wait);
+    } else {
+        getch();
+    }
+    endwin();
+#if 0
+    for ( int col = 0; col < 40; col += 1) {
+        clear () ; // Clear the window .
+        mvprintw (ROW , col , "o") ; // Displays "o".
+        refresh () ; // Refresh the window .
+        usleep ( DELAY ) ; // Sleep for 50000 microseconds .
+    }
+
+    endwin () ; // Close the screen .
+    return 0;
+#endif
+}
+
+
 
 void usage(char *exec) {
     fprintf(stderr,
@@ -31,6 +71,8 @@ void usage(char *exec) {
 int main(int argc, char **argv) {
     int c;
     Universe *u = uv_create(20,25, false);
+    uv_delete(u);
+    u = uv_create(0,0,false);
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
         case 'n':
@@ -47,8 +89,10 @@ int main(int argc, char **argv) {
             printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
             FILE *file = fopen("101.txt", "r");
             printf("File pointer was created\n");
-            printf("res = %d\n", uv_populate(u, file));
-            printf("Dump survived \n");
+            uv_populate(u, file);
+            fclose(file);
+            uv_ncurses(u, 0);
+            uv_ncurses(u, 0);
             //uv_live_cell(u, 19,24);
             //uv_live_cell(u, 0,0);
             //uv_dead_cell(u, 1,1);
