@@ -30,7 +30,7 @@ void usage(char *exec) {
 
 int main(int argc, char **argv) {
     int c;
-    Universe *u = uv_create(2,5, false);
+    Universe *u = uv_create(20,25, false);
     while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
         switch (c) {
         case 'n':
@@ -44,9 +44,18 @@ int main(int argc, char **argv) {
         case 'b':
             break;
         case 'a':
-                printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
+            printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
+            FILE *file = fopen("101.txt", "r");
+            printf("File pointer was created\n");
+            printf("res = %d\n", uv_populate(u, file));
+            printf("Dump survived \n");
+            //uv_live_cell(u, 19,24);
+            //uv_live_cell(u, 0,0);
+            //uv_dead_cell(u, 1,1);
+            //printf("the cell at 1,1 is %d\n", uv_get_cell(u, 1, 1));
+            //printf("the cell at 19,24 is %d\n", uv_get_cell(u, 19, 24));
+            //printf("the cell at 0,0 is %d\n", uv_get_cell(u, 0, 0));
             //print_universe(utest);
-
             break;
         case 'r':
             break;
