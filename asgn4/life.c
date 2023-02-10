@@ -31,17 +31,6 @@ void uv_ncurses (Universe *u, uint32_t wait) {
         getch();
     }
     endwin();
-#if 0
-    for ( int col = 0; col < 40; col += 1) {
-        clear () ; // Clear the window .
-        mvprintw (ROW , col , "o") ; // Displays "o".
-        refresh () ; // Refresh the window .
-        usleep ( DELAY ) ; // Sleep for 50000 microseconds .
-    }
-
-    endwin () ; // Close the screen .
-    return 0;
-#endif
 }
 
 void pop_un_b(Universe *a, Universe *b) {
@@ -67,35 +56,32 @@ void pop_un_b(Universe *a, Universe *b) {
 void usage(char *exec) {
     fprintf(stderr,
         "SYNOPSIS\n"
-        "   Sorts a random array using four different sorting algorithms\n"
+        "   Runs the game of life\n"
         "\n"
         "USAGE\n"
         "   %s [options] \n"
         "\n"
         "OPTIONS\n"
-        "    -a : Employs all sorting algorithms\n"
-        "    -h : Enables Heap Sort\n"
-        "    -b : Enables Batcher Sort\n"
-        "    -s : Enables Shell Sort\n"
-        "    -q : Enables Quicksort\n"
-        "    -r seed : Set the random seed to seed. The default seed is 13371453\n"
-        "    -n size : Set the array size to size. The default size is 100\n"
-        "    -p elements : Print out elements number of elements from the array. The default is "
-        "100\n"
-        "    -H display program help and usage.\n",
+        "    -t : Specify that the Game of Life is to be played on a toroidal universe.\n"
+        "    -s : Silence ncurses.\n"
+        "    -n generations : Specify the number of generations that the universe goes through. The default number of generations is 100.\n"
+        "    -i input : Specify the input file to read in order to populate the universe. By default the input should be stdin\n"
+        "    -o output :  Specify the output file to print the final state of the universe to. By default the output should be stdout.\n"
+        "    -h : display program help and usage.\n",
         exec);
 }
 
 int main(int argc, char **argv) {
     int c;
     int gens = 100;
-    
+    char *in_file_name = NULL;
+    char *out_file_name = NULL;
     bool toroidal = false;
     bool ncurses = true;
     //Universe *u = uv_create(20,25, false);
     //uv_delete(u);
     //u = uv_create(0,0,true);
-    while ((c = getopt(argc, argv, "atsn:i:o:")) != -1) {
+    while ((c = getopt(argc, argv, "ahtsn:i:o:")) != -1) {
         switch (c) {
         case 't':
             toroidal = true;
@@ -107,9 +93,10 @@ int main(int argc, char **argv) {
             ncurses = false;
             break;
         case 'i':
-
+            in_file_name = strdup(optarg);
             break;
-        case '0':
+        case 'o':
+            out_file_name = strdup(optarg);
             break;
         case 'a':
             //printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
@@ -131,27 +118,47 @@ int main(int argc, char **argv) {
         default: usage(argv[0]); exit(-1);
         }
     }
-    uint32_t num_rows;
-    uint32_t num_cols;
+
     Universe *a = uv_create(0,0,toroidal);
-    FILE *file = fopen("test.txt", "r");
-    bool condition = uv_populate(a, file);
+    FILE *in_file;
+    if (in_file_name) {
+        in_file = fopen(in_file_name, "r");
+    } else {
+        in_file = stdin;
+    }
+    bool condition = uv_populate(a, in_file);
+
+    if (in_file_name) {
+        fclose(in_file);
+    }
+
     if (!condition) {
         printf("There was an Error unable to poulate the from file\n");
     } else {
-        rewind(file);
-        fscanf(file, "%d  %d\n", &num_rows, &num_cols);
-        Universe *b = uv_create(num_rows, num_cols, toroidal);
-        //uv_ncurses(a, 0);
+        Universe *b = uv_create(uv_rows(a), uv_cols(a), toroidal);
+        uv_ncurses(a, 0);
+
         for (int i = 0; i < gens; i++) {
             pop_un_b(a, b);
             if (ncurses) {
                 uv_ncurses(b, 0);
             }
+            break;
         }
     }
-    fclose(file);
+    
+    FILE *out_file;
+    if (out_file_name) {
+        out_file = fopen(out_file_name, "w");
+    } else {
+        out_file = stdout;
+    }
+    uv_print(a, out_file);
+    if (out_file_name) {
+        fclose(out_file);
+    }
 
-
+    free(in_file_name);
+    free(out_file_name);
     return 0;
 }

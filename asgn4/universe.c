@@ -34,16 +34,16 @@ static uint32_t __uv_toroidal_search(Universe *u,uint32_t r, uint32_t c) {
 
 // this function checks the a 9, 9 square if the
 static uint32_t __uv_reg_search(Universe *u,uint32_t r,uint32_t c) {
-    //uint32_t rows = uv_rows(u);
-    //uint32_t cols = uv_cols(u);
+    uint32_t rows = uv_rows(u);
+    uint32_t cols = uv_cols(u);
     //check if the top row is valid
     int count = 0;    
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (i != 0 || j != 0) {
-                int c1 = (r + i);
-                int c2 = (c + j);
-                if(uv_get_cell(u, c1, c2)) {
+                int c1 = (r + i + rows) % rows;
+                int c2 = (c + j + cols) % cols;
+                if(uv_get_cell(u, c1, c2) && r != 0 && c != 0 && r != (rows - 1) && c != (cols - 1)) {
                     count += 1;
                 }
             }
@@ -149,6 +149,17 @@ uint32_t uv_census(Universe *u, uint32_t r, uint32_t c) {
 }
 
 void uv_print(Universe *u, FILE *outfile) {
-    fprintf(outfile, "u = %p\n", (void *)u);
+    uint32_t rows = uv_rows(u);
+    uint32_t cols = uv_cols(u);
+    for (uint32_t i = 0; i < rows; i++) {
+        for(uint32_t j = 0; j < cols; j++) {
+            if (uv_get_cell(u, i, j)) {
+                fputc('o', outfile);
+            } else {
+                fputc('.', outfile);
+            }
+        }
+        fputc('\n', outfile);
+    }
 }
 
