@@ -13,17 +13,14 @@ struct Universe {
 
 
 static uint32_t __uv_toroidal_search(Universe *u,uint32_t r, uint32_t c) {
-    printf("Using as a temp place holder %p %d %d\n", (void *)u, r, c);
     uint32_t rows = uv_rows(u);
     uint32_t cols = uv_cols(u);
     int count = 0;
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (i != 0 || j != 0) {
-                printf("i = %d j = %d\n", i, j);
                 int c1 = (r + rows+ i) % rows;
                 int c2 = (c + cols + j) % cols;
-                printf("c1 is %d, c2 is %d\n", c1, c2);
                 if(uv_get_cell(u, c1, c2)) {
                     //printf("c1 is %d, c2 is %d\n", c1, c2);
                     count += 1;
@@ -37,7 +34,6 @@ static uint32_t __uv_toroidal_search(Universe *u,uint32_t r, uint32_t c) {
 
 // this function checks the a 9, 9 square if the
 static uint32_t __uv_reg_search(Universe *u,uint32_t r,uint32_t c) {
-    printf("Using as a temp place holder %p %d %d\n", (void *)u, r, c);
     //uint32_t rows = uv_rows(u);
     //uint32_t cols = uv_cols(u);
     //check if the top row is valid
@@ -45,12 +41,9 @@ static uint32_t __uv_reg_search(Universe *u,uint32_t r,uint32_t c) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (i != 0 || j != 0) {
-                printf("i = %d j = %d\n", i, j);
                 int c1 = (r + i);
                 int c2 = (c + j);
-                //printf("c1 is %d, c2 is %d\n", c1, c2);
                 if(uv_get_cell(u, c1, c2)) {
-                    printf("c1 is %d, c2 is %d\n", c1, c2);
                     count += 1;
                 }
             }
@@ -147,27 +140,7 @@ bool uv_populate(Universe *u, FILE *infile) {
 }
 
 uint32_t uv_census(Universe *u, uint32_t r, uint32_t c) {
-    int rows = uv_rows(u);
-    int cols = uv_cols(u);
     //int count = 0;
-    printf("Using as a temp place holder %p %d %d\n", (void *)u, r, c);
-    printf("Using as a temp place holder %d %d\n", rows, cols);
-    /*for (int i = -1; i < 2; i++) {
-        for (int j = -1; j < 2; j++) {
-            if (i != 0 || j != 0) {
-                printf("i = %d j = %d\n", i, j);
-                int c1 = (r + i) % rows;
-                int c2 = (c + j) % cols;
-                //printf("c1 is %d, c2 is %d\n", c1, c2);
-                if (u->toroidal) {
-                    if(uv_get_cell(u, c1, c2)) {
-                        printf("c1 is %d, c2 is %d\n", c1, c2);
-                        count += 1;
-                    }
-                }
-            }
-        }
-    }*/
     if (u->toroidal) {
         return __uv_toroidal_search(u, r, c);
     } else {

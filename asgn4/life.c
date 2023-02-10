@@ -44,7 +44,25 @@ void uv_ncurses (Universe *u, uint32_t wait) {
 #endif
 }
 
-
+void pop_un_b(Universe *a, Universe *b) {
+    uint32_t rows = uv_rows(a);
+    uint32_t cols = uv_cols(a);
+    bool cell;
+    uint32_t neighbors;
+    for (uint32_t i = 0; i < rows; i++) {
+        for (uint32_t j = 0; j < cols; j++) {
+            cell = uv_get_cell(a, i, j);
+            neighbors = uv_census(a, i, j);
+            if (cell && (neighbors == 2 || neighbors == 3)) {
+                uv_live_cell(b, i, j);
+            } else {
+                if (neighbors == 3) {
+                    uv_live_cell(b, i, j);
+                }
+            }
+        }
+    }
+}
 
 void usage(char *exec) {
     fprintf(stderr,
@@ -70,30 +88,38 @@ void usage(char *exec) {
 
 int main(int argc, char **argv) {
     int c;
-    Universe *u = uv_create(20,25, false);
-    uv_delete(u);
-    u = uv_create(0,0,true);
-    while ((c = getopt(argc, argv, "abhqsr:n:p:H")) != -1) {
+    int gens = 100;
+    
+    bool toroidal = false;
+    bool ncurses = true;
+    //Universe *u = uv_create(20,25, false);
+    //uv_delete(u);
+    //u = uv_create(0,0,true);
+    while ((c = getopt(argc, argv, "atsn:i:o:")) != -1) {
         switch (c) {
-        case 'n':
+        case 't':
+            toroidal = true;
             break;
-        case 'q':
+        case 'n':
+            gens = (uint32_t) strtoul(optarg, NULL, 10); /* Number of gerations */
             break;
         case 's':
+            ncurses = false;
             break;
-        case 'h':
+        case 'i':
+
             break;
-        case 'b':
+        case '0':
             break;
         case 'a':
-            printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
-            FILE *file = fopen("test.txt", "r");
-            printf("File pointer was created\n");
-            uv_populate(u, file);
-            fclose(file);
-            uv_ncurses(u, 0);
-            uint32_t neigh = uv_census(u, 0, 0);
-            printf("the amount of neighbors is %d\n", neigh);
+            //printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
+            //FILE *file = fopen("test.txt", "r");
+            //printf("File pointer was created\n");
+            //uv_populate(u, file);
+            //fclose(file);
+            //uv_ncurses(u, 0);
+            //uint32_t neigh = uv_census(u, 0, 0);
+            //printf("the amount of neighbors is %d\n", neigh);
             //uv_live_cell(u, 19,24);
             //uv_live_cell(u, 0,0);
             //uv_dead_cell(u, 1,1);
@@ -102,13 +128,30 @@ int main(int argc, char **argv) {
             //printf("the cell at 0,0 is %d\n", uv_get_cell(u, 0, 0));
             //print_universe(utest);
             break;
-        case 'r':
-            break;
-        case 'p':
-            break;
         default: usage(argv[0]); exit(-1);
         }
     }
+    uint32_t num_rows;
+    uint32_t num_cols;
+    Universe *a = uv_create(0,0,toroidal);
+    FILE *file = fopen("test.txt", "r");
+    bool condition = uv_populate(a, file);
+    if (!condition) {
+        printf("There was an Error unable to poulate the from file\n");
+    } else {
+        rewind(file);
+        fscanf(file, "%d  %d\n", &num_rows, &num_cols);
+        Universe *b = uv_create(num_rows, num_cols, toroidal);
+        //uv_ncurses(a, 0);
+        for (int i = 0; i < gens; i++) {
+            pop_un_b(a, b);
+            if (ncurses) {
+                uv_ncurses(b, 0);
+            }
+        }
+    }
+    fclose(file);
+
 
     return 0;
 }
