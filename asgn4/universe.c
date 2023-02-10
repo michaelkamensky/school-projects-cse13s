@@ -43,9 +43,11 @@ static uint32_t __uv_reg_search(Universe *u,uint32_t r,uint32_t c) {
             if (i != 0 || j != 0) {
                 int c1 = (r + i + rows) % rows;
                 int c2 = (c + j + cols) % cols;
-                if(uv_get_cell(u, c1, c2) && r != 0 && c != 0 && r != (rows - 1) && c != (cols - 1)) {
+                //if(uv_get_cell(u, c1, c2) && r != 0 && c != 0 && r != (rows - 1) && c != (cols - 1)) {
+
+                if(uv_get_cell(u, c1, c2)) {
                     count += 1;
-                }
+               }
             }
         }
     }

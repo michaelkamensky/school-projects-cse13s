@@ -26,7 +26,7 @@ void uv_ncurses (Universe *u, uint32_t wait) {
     }
     refresh();
     if (wait != 0) {
-        sleep(wait);
+        usleep(wait);
     } else {
         getch();
     }
@@ -53,6 +53,15 @@ void pop_un_b(Universe *a, Universe *b) {
     }
 }
 
+void uv_clear_b(Universe *b) {
+    uint32_t rows = uv_rows(b);
+    uint32_t cols = uv_cols(b);
+    for (uint32_t i = 0; i < rows; i++) {
+        for(uint32_t j = 0; j < cols; j++) {
+            uv_dead_cell(b, i, j);
+        }
+    }
+}
 void usage(char *exec) {
     fprintf(stderr,
         "SYNOPSIS\n"
@@ -78,9 +87,10 @@ int main(int argc, char **argv) {
     char *out_file_name = NULL;
     bool toroidal = false;
     bool ncurses = true;
-    //Universe *u = uv_create(20,25, false);
+    Universe *u = uv_create(20,25, false);
     //uv_delete(u);
     //u = uv_create(0,0,true);
+    FILE *test_file;
     while ((c = getopt(argc, argv, "ahtsn:i:o:")) != -1) {
         switch (c) {
         case 't':
@@ -99,14 +109,17 @@ int main(int argc, char **argv) {
             out_file_name = strdup(optarg);
             break;
         case 'a':
+            //Universe *u = uv_create(20,25, false);
+            //uv_delete(u);
+            //u = uv_create(0,0,true);
             //printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
-            //FILE *file = fopen("test.txt", "r");
+            test_file = fopen("test.txt", "r");
             //printf("File pointer was created\n");
-            //uv_populate(u, file);
-            //fclose(file);
-            //uv_ncurses(u, 0);
-            //uint32_t neigh = uv_census(u, 0, 0);
-            //printf("the amount of neighbors is %d\n", neigh);
+            uv_populate(u, test_file);
+            fclose(test_file);
+            uv_ncurses(u, 0);
+            uint32_t neigh = uv_census(u, 0, 0);
+            printf("the amount of neighbors is %d\n", neigh);
             //uv_live_cell(u, 19,24);
             //uv_live_cell(u, 0,0);
             //uv_dead_cell(u, 1,1);
@@ -141,9 +154,13 @@ int main(int argc, char **argv) {
         for (int i = 0; i < gens; i++) {
             pop_un_b(a, b);
             if (ncurses) {
-                uv_ncurses(b, 0);
+                uv_ncurses(b, 50000);
             }
-            break;
+            Universe *temp = a;
+            a = b;
+            b = temp;
+            uv_clear_b(b);
+
         }
     }
     
