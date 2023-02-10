@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
             uv_populate(u, test_file);
             fclose(test_file);
             uv_ncurses(u, 0);
-            uint32_t neigh = uv_census(u, 0, 0);
+            uint32_t neigh = uv_census(u, 8, 17);
             printf("the amount of neighbors is %d\n", neigh);
             //uv_live_cell(u, 19,24);
             //uv_live_cell(u, 0,0);
