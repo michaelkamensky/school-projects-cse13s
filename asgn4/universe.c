@@ -36,18 +36,13 @@ static uint32_t __uv_toroidal_search(Universe *u,uint32_t r, uint32_t c) {
 static uint32_t __uv_reg_search(Universe *u,uint32_t r,uint32_t c) {
     uint32_t rows = uv_rows(u);
     uint32_t cols = uv_cols(u);
-    //check if the top row is valid
     int count = 0;    
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (i != 0 || j != 0) {
-                //int c1 = (r + i + rows) % rows;
-                //int c2 = (c + j + cols) % cols;
                 int c1 = (r + i);
                 int c2 = (c + j);
-                //if(uv_get_cell(u, c1, c2) && r != 0 && c != 0 && r != (rows - 1) && c != (cols - 1)) {
-                //    count += 1;
-                //}
+
                 if (c1 >= 0 && c2 >= 0 && c1 < (int)rows && c2 < (int)cols) {
                     if(uv_get_cell(u, c1, c2)) {
                         count += 1;
@@ -58,8 +53,6 @@ static uint32_t __uv_reg_search(Universe *u,uint32_t r,uint32_t c) {
     }
     return count;
 }
-
-
 
 static Universe *__uv_create(Universe *universe, uint32_t rows, uint32_t cols) {
     universe->rows = rows;
@@ -147,7 +140,6 @@ bool uv_populate(Universe *u, FILE *infile) {
 }
 
 uint32_t uv_census(Universe *u, uint32_t r, uint32_t c) {
-    //int count = 0;
     if (u->toroidal) {
         return __uv_toroidal_search(u, r, c);
     } else {

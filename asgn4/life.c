@@ -8,7 +8,7 @@
 #include <ncurses.h>
 
 void uv_ncurses (Universe *u, uint32_t wait) {
-    initscr () ; // Initialize the screen .
+    //initscr () ; // Initialize the screen .
     curs_set ( FALSE ) ; // Hide the cursor .
     uint32_t rows = uv_rows(u);
     uint32_t cols = uv_cols(u);
@@ -17,7 +17,7 @@ void uv_ncurses (Universe *u, uint32_t wait) {
         for (uint32_t c = 0; c < cols; c++) {
             bool b = uv_get_cell(u, r, c);
             if (b) {
-                mvprintw(r, c, "x");
+                mvprintw(r, c, "o");
             } else {
                 mvprintw(r, c, " ");
             }
@@ -30,7 +30,7 @@ void uv_ncurses (Universe *u, uint32_t wait) {
     } else {
         getch();
     }
-    endwin();
+    //endwin();
 }
 
 void pop_un_b(Universe *a, Universe *b) {
@@ -87,10 +87,6 @@ int main(int argc, char **argv) {
     char *out_file_name = NULL;
     bool toroidal = false;
     bool ncurses = true;
-    Universe *u = uv_create(20,25, false);
-    //uv_delete(u);
-    //u = uv_create(0,0,true);
-    FILE *test_file;
     while ((c = getopt(argc, argv, "ahtsn:i:o:")) != -1) {
         switch (c) {
         case 't':
@@ -107,26 +103,6 @@ int main(int argc, char **argv) {
             break;
         case 'o':
             out_file_name = strdup(optarg);
-            break;
-        case 'a':
-            //Universe *u = uv_create(20,25, false);
-            //uv_delete(u);
-            //u = uv_create(0,0,true);
-            //printf("number of rows is %d number of columns %d\n", uv_rows(u), uv_cols(u));
-            test_file = fopen("test.txt", "r");
-            //printf("File pointer was created\n");
-            uv_populate(u, test_file);
-            fclose(test_file);
-            uv_ncurses(u, 0);
-            uint32_t neigh = uv_census(u, 8, 17);
-            printf("the amount of neighbors is %d\n", neigh);
-            //uv_live_cell(u, 19,24);
-            //uv_live_cell(u, 0,0);
-            //uv_dead_cell(u, 1,1);
-            //printf("the cell at 1,1 is %d\n", uv_get_cell(u, 1, 1));
-            //printf("the cell at 19,24 is %d\n", uv_get_cell(u, 19, 24));
-            //printf("the cell at 0,0 is %d\n", uv_get_cell(u, 0, 0));
-            //print_universe(utest);
             break;
         default: usage(argv[0]); exit(-1);
         }
@@ -149,8 +125,10 @@ int main(int argc, char **argv) {
         printf("There was an Error unable to poulate the from file\n");
     } else {
         Universe *b = uv_create(uv_rows(a), uv_cols(a), toroidal);
-        //uv_ncurses(a, 0);
 
+        if (ncurses) {
+            initscr();
+        }
         for (int i = 0; i < gens; i++) {
             pop_un_b(a, b);
             if (ncurses) {
@@ -162,7 +140,10 @@ int main(int argc, char **argv) {
             uv_clear_b(b);
 
         }
-    uv_delete(b);
+        if (ncurses) {
+            endwin();
+        }
+        uv_delete(b);
     }
     
     FILE *out_file;
