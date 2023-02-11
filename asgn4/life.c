@@ -1,15 +1,15 @@
 #include "universe.h"
 
 #include <inttypes.h>
+#include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <ncurses.h>
 
-void uv_ncurses (Universe *u, uint32_t wait) {
+void uv_ncurses(Universe *u, uint32_t wait) {
     //initscr () ; // Initialize the screen .
-    curs_set ( FALSE ) ; // Hide the cursor .
+    curs_set(FALSE); // Hide the cursor .
     uint32_t rows = uv_rows(u);
     uint32_t cols = uv_cols(u);
     clear();
@@ -21,7 +21,6 @@ void uv_ncurses (Universe *u, uint32_t wait) {
             } else {
                 mvprintw(r, c, " ");
             }
-
         }
     }
     refresh();
@@ -57,7 +56,7 @@ void uv_clear_b(Universe *b) {
     uint32_t rows = uv_rows(b);
     uint32_t cols = uv_cols(b);
     for (uint32_t i = 0; i < rows; i++) {
-        for(uint32_t j = 0; j < cols; j++) {
+        for (uint32_t j = 0; j < cols; j++) {
             uv_dead_cell(b, i, j);
         }
     }
@@ -73,9 +72,12 @@ void usage(char *exec) {
         "OPTIONS\n"
         "    -t : Specify that the Game of Life is to be played on a toroidal universe.\n"
         "    -s : Silence ncurses.\n"
-        "    -n generations : Specify the number of generations that the universe goes through. The default number of generations is 100.\n"
-        "    -i input : Specify the input file to read in order to populate the universe. By default the input should be stdin\n"
-        "    -o output :  Specify the output file to print the final state of the universe to. By default the output should be stdout.\n"
+        "    -n generations : Specify the number of generations that the universe goes through. "
+        "The default number of generations is 100.\n"
+        "    -i input : Specify the input file to read in order to populate the universe. By "
+        "default the input should be stdin\n"
+        "    -o output :  Specify the output file to print the final state of the universe to. By "
+        "default the output should be stdout.\n"
         "    -h : display program help and usage.\n",
         exec);
 }
@@ -89,26 +91,18 @@ int main(int argc, char **argv) {
     bool ncurses = true;
     while ((c = getopt(argc, argv, "ahtsn:i:o:")) != -1) {
         switch (c) {
-        case 't':
-            toroidal = true;
-            break;
+        case 't': toroidal = true; break;
         case 'n':
             gens = (uint32_t) strtoul(optarg, NULL, 10); /* Number of gerations */
             break;
-        case 's':
-            ncurses = false;
-            break;
-        case 'i':
-            in_file_name = strdup(optarg);
-            break;
-        case 'o':
-            out_file_name = strdup(optarg);
-            break;
+        case 's': ncurses = false; break;
+        case 'i': in_file_name = strdup(optarg); break;
+        case 'o': out_file_name = strdup(optarg); break;
         default: usage(argv[0]); exit(-1);
         }
     }
 
-    Universe *a = uv_create(0,0,toroidal);
+    Universe *a = uv_create(0, 0, toroidal);
     FILE *in_file;
     if (in_file_name) {
         in_file = fopen(in_file_name, "r");
@@ -138,14 +132,13 @@ int main(int argc, char **argv) {
             a = b;
             b = temp;
             uv_clear_b(b);
-
         }
         if (ncurses) {
             endwin();
         }
         uv_delete(b);
     }
-    
+
     FILE *out_file;
     if (out_file_name) {
         out_file = fopen(out_file_name, "w");
