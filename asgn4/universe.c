@@ -94,19 +94,19 @@ uint32_t uv_cols(struct Universe *u) {
 }
 
 void uv_live_cell(Universe *u, uint32_t r, uint32_t c) {
-    if (r >= 0 && r <= u->rows && c >= 0 && c <= u->cols) {
+    if (r <= u->rows && c <= u->cols) {
         u->grid[r][c] = true;
     }
 }
 
 void uv_dead_cell(Universe *u, uint32_t r, uint32_t c) {
-    if (r >= 0 && r <= u->rows && c >= 0 && c <= u->cols) {
+    if (r <= u->rows && c <= u->cols) {
         u->grid[r][c] = false;
     }
 }
 
 bool uv_get_cell(Universe *u, uint32_t r, uint32_t c) {
-    if (r >= 0 && r <= u->rows && c >= 0 && c <= u->cols) {
+    if (r <= u->rows && c <= u->cols) {
         return u->grid[r][c];
     } else {
         return false;
@@ -119,11 +119,11 @@ bool uv_populate(Universe *u, FILE *infile) {
     uint32_t second;
     int count = 0;
     __uv_delete(u);
-    while (EOF != fscanf(infile, "%d %d\n", &first, &second)) {
+    while (EOF != fscanf(infile, "%u %u\n", &first, &second)) {
         if (count == 0) {
             __uv_create(u, first, second);
         } else {
-            if (first >= 0 && first <= u->rows && second >= 0 && second <= u->cols) {
+            if (first <= u->rows && second <= u->cols) {
                 uv_live_cell(u, first, second);
             } else {
                 return false;
