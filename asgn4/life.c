@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
         printf("There was an Error unable to poulate the from file\n");
     } else {
         Universe *b = uv_create(uv_rows(a), uv_cols(a), toroidal);
-        uv_ncurses(a, 0);
+        //uv_ncurses(a, 0);
 
         for (int i = 0; i < gens; i++) {
             pop_un_b(a, b);
@@ -162,6 +162,7 @@ int main(int argc, char **argv) {
             uv_clear_b(b);
 
         }
+    uv_delete(b);
     }
     
     FILE *out_file;
@@ -175,6 +176,7 @@ int main(int argc, char **argv) {
         fclose(out_file);
     }
 
+    uv_delete(a);
     free(in_file_name);
     free(out_file_name);
     return 0;
