@@ -1,7 +1,7 @@
 # The Game of Life (Assignment 4)
 
 ## Description
-This is a project that runs the game of life. The game works by having a 2d grid of alive and dead cells. Each generation or iteration of the program checks every cell. If an alive cell has two or three live neighbors it lives. If a deadcell has exactly three cells it becomes alive. All other cells become dead. Then the program runs through the many iterations of generations of the board. The project can take an input file and can retrun an out put file, and has a toroidal mode and ncurses mode.
+This is a project that runs the game of life. The game works by having a 2d grid of alive and dead cells. Each generation or iteration of the program checks every cell. If an alive cell has two or three live neighbors it lives. If a dead cell has exactly three cells it becomes alive. All other cells become dead. Then the program runs through the many iterations of generations of the board. The project can take an input file and can retrun an out put file, and has a toroidal mode and ncurses mode.
 
 This is a response to [assignment 4](https://git.ucsc.edu/cse13s/winter2023-section01/resources/-/blob/main/asgn4/asgn4.pdf) in [Cse13s course](https://git.ucsc.edu/cse13s/winter2023-section01/resources)
 
@@ -14,7 +14,7 @@ make clean && make
 ## Usage
 To run this program run life as follows
 ```
-./life                                           
+./life [options]                                           
 ```
 You can use indvidual tests using additional options.
 The opitions can be seen with -h command:
@@ -34,8 +34,8 @@ OPTIONS
     -h : display program help and usage.
 ```
 
-##False Positive from valgrind
-I observed that valgrind found 3 possible memory leaks in ncurses initscr() when no -s option is used
+## False Positive from valgrind
+I observed that valgrind found 3 possible memory leaks in ncurses initscr() when no -s option is used.
 It is not a problem with my program.
 ```
 ==4739==
@@ -86,8 +86,8 @@ It is not a problem with my program.
 
 ```
 
-##False Positive from scan-build
-scan-build complains about memory leak in memory pointed by in\_file\_name and out\_file\_name
+## False Positive from scan-build
+scan-build complains about memory leak in memory pointed by in\_file\_name and out\_file\_name.
 I believe this report is a false positive because at the end of main I free both pointers
 ```
 mkamensk@vera:~/cse13s/asgn4$ scan-build make
