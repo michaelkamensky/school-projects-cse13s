@@ -28,6 +28,14 @@ keygen: $(keygen_objects)
 keygen.o: keygen.c
 	$(CC) $(CFLAGS) -c $<
 
+randstate.o: randstate.c
+	$(CC) $(CFLAGS) -c $<
+
+randstate_ut.o: randstate_ut.c
+	$(CC) $(CFLAGS) -c $<
+
+randstate_ut: randstate.o randstate_ut.o
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
 	rm -f decrypt encrypt keygen $(decrypt_objects) $(encrypt_objects) $(keygen_objects)
