@@ -3,6 +3,7 @@ CC = clang
 #CC = gcc
 #CFLAGS = -Wall -Wpedantic -Werror -Wextra -g 
 CFLAGS = -g
+LFLAGS = $(shell pkg-config --libs gmp)
 decrypt_objects = decrypt.o
 encrypt_objects = encrypt.o
 keygen_objects = keygen.o
@@ -35,7 +36,17 @@ randstate_ut.o: randstate_ut.c
 	$(CC) $(CFLAGS) -c $<
 
 randstate_ut: randstate.o randstate_ut.o
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
+
+numtheory.o: numtheory.c
+	$(CC) $(CFLAGS) -c $<
+
+numtheory_ut.o: numtheory_ut.c
+	$(CC) $(CFLAGS) -c $<
+
+numtheory_ut: numtheory.o numtheory_ut.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
+
 
 clean:
 	rm -f decrypt encrypt keygen $(decrypt_objects) $(encrypt_objects) $(keygen_objects)
