@@ -24,6 +24,17 @@ void test_gcd(uint32_t av, uint32_t bv) {
 
 }
 
+void test_mod_inverse(uint32_t av, uint32_t bv) {
+    mpz_t o, a, b;
+    mpz_inits(o, a, b, NULL);
+    mpz_set_ui(a, av);
+    mpz_set_ui(b, bv);
+    mod_inverse(o, a, b);
+    gmp_printf("mod_inverse(%Zd, %Zd, %Zd)\n", o, a, b);
+
+}
+
+
 int main(int argc, char **argv) {
 #if 0
     test_pow_mod(100, 500, 333);
@@ -33,10 +44,22 @@ int main(int argc, char **argv) {
     test_pow_mod(2000000, 50000, 3333);
     test_pow_mod(67843, 12345, 789);
 #endif
+#if 0
     test_gcd(9, 3);
     test_gcd(9, 6);
     test_gcd(9, 18);
     test_gcd(137 * 5* 6, 137 * 7);
+#endif
+# if 1
+    test_mod_inverse(3, 26);
+    test_mod_inverse(3, 11);
+    test_mod_inverse(17, 23);
+    test_mod_inverse(4, 9);
+    test_mod_inverse(7, 26);
+    test_mod_inverse(13, 2436);
+    test_mod_inverse(13, 2435);
+    test_mod_inverse(13, 4);
+#endif
     return 0;
 }
 
