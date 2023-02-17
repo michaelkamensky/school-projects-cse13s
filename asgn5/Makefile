@@ -49,7 +49,7 @@ numtheory_ut: numtheory.o numtheory_ut.o randstate.o
 
 
 clean:
-	rm -f decrypt encrypt keygen $(decrypt_objects) $(encrypt_objects) $(keygen_objects)
+	rm -f decrypt encrypt keygen numtheory_ut randstate_ut *.o
 
 format:
 	clang-format -i -style=file *.[ch]
