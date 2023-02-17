@@ -44,7 +44,7 @@ numtheory.o: numtheory.c
 numtheory_ut.o: numtheory_ut.c
 	$(CC) $(CFLAGS) -c $<
 
-numtheory_ut: numtheory.o numtheory_ut.o
+numtheory_ut: numtheory.o numtheory_ut.o randstate.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
 
 

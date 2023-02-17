@@ -1,10 +1,12 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <gmp.h>
 #include <stdio.h>
 
 #include "numtheory.h"
+#include "randstate.h"
 
 void gcd(mpz_t g, mpz_t a, mpz_t b) {
     mpz_t t, atemp, btemp;
@@ -60,31 +62,81 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
 }
 
 void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
-    mpz_t p, temp1, temp2, dtemp;
-    mpz_inits(p, temp1, temp2, dtemp, NULL);
-    mpz_set_ui(o, 1);
+    mpz_t p, v, vxp, pxp, dtemp;
+    mpz_inits(p, v, vxp, pxp, dtemp, NULL);
+    mpz_set_ui(v, 1);
     mpz_set(p, a);
     mpz_set(dtemp, d);
     while (mpz_cmp_ui(dtemp, 0) > 0) {
         if(mpz_odd_p(dtemp)) {
-            mpz_mul(temp1, o, p);
-            mpz_mod(o, temp1, n);
+            mpz_mul(vxp, v, p);
+            mpz_mod(v, vxp, n);
         }
-        mpz_mul(temp2, p, p);
-        mpz_mod(p, temp2, n);
+        mpz_mul(pxp, p, p);
+        mpz_mod(p, pxp, n);
         mpz_fdiv_q_ui(dtemp, dtemp, 2);
     }
-    mpz_clears(p, temp1, temp2, dtemp, NULL);
+    mpz_set(o, v);
+    mpz_clears(p, v, vxp, pxp, dtemp, NULL);
 }
 
 bool is_prime(mpz_t n, uint64_t iters) {
-    mpz_t ntempt, y;
-    mpz_inits(ntemp, y, NULL);
-    //write n-1=2^(s)r such that r is odd
-    for (int i = 0; i < iters; i++) {
-        //choose random a (2,3,...,n-2)
-        pow_mod(y, a, r, ntemp); 
+    mpz_t y, r, j, s, s_1, n_1, n_3, a, two;
+    mpz_inits(y, r, j, s, s_1, n_1, n_3, a, two, NULL);
+
+    // r = n - 1
+    mpz_sub_ui(r, n, 1);
+    // temp2 = n - 1
+    mpz_sub_ui(n_1, n, 1);
+    // n_3 = n - 3
+    mpz_sub_ui(n_3, n, 3);
+    // two = 2
+    mpz_set_ui(two, 2);
+
+    // write n-1=2^(s)r such that r is odd
+    // while (temp1 % 2 == 0)
+    while (mpz_even_p(r)) {
+        // temp1 = temp1 / 2
+        mpz_fdiv_q_ui(r, r, 2);
+        // s = s + 1
+        mpz_add_ui(s, s, 1);
     }
+    for (int i = 0; i < iters; i++) {
+        // choose random a (2,3,...,n-2)
+        // gives between 0 and n-4 inclusive
+        mpz_urandomm(a, state, n_3);
+        // a = a + 2
+        // gives between 2 amd n-2 inclusive
+        mpz_add_ui(a, a, 2);
+        // y = pow_mod(a, r, n)
+        pow_mod(y, a, r, n);
+        // if ((y != 1) && (y != n_1))
+        if ((mpz_cmp_ui(y, 1) != 0) && (mpz_cmp(y, n_1) != 0)) {
+            // j = 1
+            mpz_set_ui(j, 1);
+            // s_1 = s - 1
+            mpz_sub_ui(s_1, s, 1);
+            // while ((j <= s-1) && (y != n - 1))
+            while ((mpz_cmp(j, s_1) <= 0) && mpz_cmp(y, n_1) != 0) {
+                // y = pow_mod(2, n)
+                pow_mod(y, y, two, n);
+                // if (y == 1)
+                if (mpz_cmp_ui(y, 1) == 0) {
+                    mpz_clears(y, r, j, s, s_1, n_1, n_3, a, two, NULL);
+                    return false;
+                }
+                // j = j + 1
+                mpz_add_ui(j, j, 1);
+            }
+            // if (y != n -1)
+            if (mpz_cmp(y, n_1) != 0) {
+                mpz_clears(y, r, j, s, s_1, n_1, n_3, a, two, NULL);
+                return false;
+            }
+        }
+    }
+    mpz_clears(y, r, j, s, s_1, n_1, n_3, a, two, NULL);
+    return true;
 }
 
 //void make_prime(mpz_t p, uint64_t bits, uint64_t iters);
