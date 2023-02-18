@@ -53,7 +53,7 @@ ss.o: ss.c
 ss_ut.o: ss_ut.c
 	$(CC) $(CFLAGS) -c $<
 
-ss_ut: ss.o ss_ut.o randstate.o
+ss_ut: ss.o ss_ut.o randstate.o numtheory.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
 
 
