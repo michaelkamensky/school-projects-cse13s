@@ -25,14 +25,41 @@ void test_ss_read_pub(FILE *f) {
 
 }
 
-void test_ss_make_pub(uint64_t nbits, uint64_t iters) {
+void test_ss(uint64_t nbits, uint64_t iters, uint32_t mv) {
+    // publci key gen
     mpz_t n, p, q;
     mpz_inits(n, p, q, NULL);
     ss_make_pub(p, q, n, nbits, iters);
     gmp_printf("n = %Zd, p = %Zd, q = %Zd\n", n, p, q);
+
+    // private key gen
+    mpz_t d, pq;
+    mpz_inits(d, pq, NULL);
+    ss_make_priv(d, pq, p, q);
+    gmp_printf("p = %Zd, q = %Zd\n", p, q);
+    gmp_printf("d = %Zd, pq = %Zd\n", d, pq);
+
+    // encryption
+    mpz_t c, m;
+    mpz_inits(c, m, NULL);
+    mpz_set_ui(m, mv);
+    ss_encrypt(c, m, n);
+    gmp_printf("ss_encrypt(%Zd, %Zd, %Zd)\n", c, m, n);
+
+    // decryption
+    mpz_t out;
+    mpz_inits(out, NULL);
+    ss_decrypt(out, c, d, pq);
+    gmp_printf("ss_decrypt(%Zd, %Zd, %Zd, %Zd)\n", out, c, d, pq);
+
+
+    mpz_clears(d, pq, NULL);
     mpz_clears(n, p, q, NULL);
+    mpz_clears(c, m, NULL);
+    mpz_clears(out, NULL);
 
 }
+
 
 
 int main(int argc, char **argv) {
@@ -43,22 +70,20 @@ int main(int argc, char **argv) {
     test_ss_read_pub(f_in);
     fclose(f_in);
     randstate_init(1);
+    test_ss(256, 50, 1000000);
+    test_ss(256, 50, 0); // not suppoused to encrypt
+    test_ss(1024, 50, 1); // not suppoused to encrypt
+    test_ss(1024, 50, 2);
+    test_ss(2048, 100, 999999999);
+
+#if 0
     test_ss_make_pub(30, 10);
     test_ss_make_pub(256, 20);
     test_ss_make_pub(1024, 30);
     test_ss_make_pub(2048, 100);
+#endif
     randstate_clear();
 
-#if 0
-    test_pow_mod(111, 17, 137);
-    test_pow_mod(41, 2, 137);
-    test_pow_mod(100, 500, 333);
-    test_pow_mod(30, 5, 3);
-    test_pow_mod(323, 655, 3);
-    test_pow_mod(33, 157, 6);
-    test_pow_mod(2000000, 50000, 3333);
-    test_pow_mod(67843, 12345, 789);
-#endif
     return 0;
 }
 

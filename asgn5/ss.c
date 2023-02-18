@@ -17,7 +17,7 @@
 //  pbfile: open and writable file stream
 //
 void ss_write_pub(mpz_t n, char username[], FILE *pbfile) {
-    gmp_fprintf(pbfile, "%Zd\n", n);
+    gmp_fprintf(pbfile, "%Zx\n", n);
     fprintf(pbfile, "%s\n", username);
 
 }
@@ -35,7 +35,7 @@ void ss_write_pub(mpz_t n, char username[], FILE *pbfile) {
 //  all mpz_t arguments to be initialized
 //
 void ss_read_pub(mpz_t n, char username[], FILE *pbfile) {
-    gmp_fscanf(pbfile, "%Zd\n", n); 
+    gmp_fscanf(pbfile, "%Zx\n", n); 
     fscanf(pbfile, "%s\n", username);
 }
 
@@ -85,4 +85,64 @@ void ss_make_pub(mpz_t p, mpz_t q, mpz_t n, uint64_t nbits, uint64_t iters) {
     mpz_clears( q_1, p_1, pp, mod1, mod2, NULL);
 }
 
+//
+// Generates components for a new SS private key.
+//
+// Provides:
+//  d:  private exponent
+//  pq: private modulus
+//
+// Requires:
+//  p:  first prime number
+//  q: second prime number
+//  all mpz_t arguments to be initialized
+//
+void ss_make_priv(mpz_t d, mpz_t pq, mpz_t p, mpz_t q) {
+    mpz_t q_1, p_1, lcm, n;
+    mpz_inits( q_1, p_1, lcm, n, NULL);
+    // p_1 = p - 1
+    mpz_sub_ui(p_1, p, 1);
+    // q_1 = q - 1
+    mpz_sub_ui(q_1, q, 1);
+    // lcm = lcm(p_1, q_1)
+    mpz_lcm(lcm, p_1, q_1);
+    // pq = p * q
+    mpz_mul(pq, p, q);
+    // n = n * pq
+    mpz_mul(n, pq, p);
+    // d = mod_inverse(pq, lcm)
+    mod_inverse(d, n, lcm);
+}
 
+//
+// Encrypt number m into number c
+//
+// Provides:
+//  c: encrypted integer
+//
+// Requires:
+//  m: original integer
+//  n: public exponent/modulus
+//  all mpz_t arguments to be initialized
+//
+void ss_encrypt(mpz_t c, mpz_t m, mpz_t n) {
+    // c = pow_mod(m, n, n)
+    pow_mod(c, m, n, n);
+}
+
+//
+// Decrypt number c into number m
+//
+// Provides:
+//  m: decrypted/original integer
+//
+// Requires:
+//  c: encrypted integer
+//  d: private exponent
+//  pq: private modulus
+//  all mpz_t arguments to be initialized
+//
+void ss_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t pq){
+    // m = pow_mod(c, d, pq)
+    pow_mod(m, c, d, pq);
+}
