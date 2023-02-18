@@ -45,6 +45,14 @@ void test_is_prime(uint32_t av, uint32_t iterations) {
 
 }
 
+void test_make_prime(uint64_t bits, uint64_t iterations) {
+    mpz_t a;
+    mpz_inits(a, NULL);
+    make_prime(a, bits, iterations);
+    gmp_printf("make_prime(%Zd, %d %d)\n", a, bits, iterations);
+
+}
+
 
 int main(int argc, char **argv) {
 #if 0
@@ -75,6 +83,13 @@ int main(int argc, char **argv) {
 #endif
 #if 1
     randstate_init(1);
+    test_is_prime(0, 10);
+    test_is_prime(1, 10);
+    test_is_prime(2, 10);
+    test_is_prime(3, 10);
+    test_is_prime(4, 10);
+    test_is_prime(5, 10);
+    test_is_prime(6, 10);
     test_is_prime(19, 10);
     test_is_prime(137, 10);
     test_is_prime(997, 10);
@@ -86,6 +101,14 @@ int main(int argc, char **argv) {
     test_is_prime(93891, 10);
     test_is_prime(194323, 10);
     test_is_prime(194311, 10);
+    randstate_clear();
+#endif
+#if 0
+    randstate_init(1);
+    test_make_prime(8, 10);
+    test_make_prime(12, 10);
+    test_make_prime(15, 10);
+    test_make_prime(256, 100);
     randstate_clear();
 #endif
     return 0;

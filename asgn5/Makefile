@@ -9,7 +9,7 @@ encrypt_objects = encrypt.o
 keygen_objects = keygen.o
 
 
-all: decrypt encrypt keygen
+all: decrypt encrypt keygen randstate_ut numtheory_ut
 
 decrypt: $(decrypt_objects)
 	$(CC) $(CFLAGS) -o $@ $(decrypt_objects)

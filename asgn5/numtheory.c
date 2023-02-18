@@ -81,6 +81,14 @@ void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
 }
 
 bool is_prime(mpz_t n, uint64_t iters) {
+    // special cases
+    if ((mpz_cmp_ui(n, 0) == 0) || (mpz_cmp_ui(n, 1) == 0)) {
+        return false;
+    }
+    // more special cases cause we subtract three from n
+    if ((mpz_cmp_ui(n, 2) == 0) || (mpz_cmp_ui(n, 3) == 0)) {
+        return true;
+    }
     mpz_t y, r, j, s, s_1, n_1, n_3, a, two;
     mpz_inits(y, r, j, s, s_1, n_1, n_3, a, two, NULL);
 
@@ -139,7 +147,35 @@ bool is_prime(mpz_t n, uint64_t iters) {
     return true;
 }
 
-//void make_prime(mpz_t p, uint64_t bits, uint64_t iters);
+void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
+    mpz_t  min, min_a_8, bits_a_8, result, two;
+    mpz_inits(min, min_a_8, bits_a_8, result, two, NULL);
+    // two = 2
+    mpz_set_ui(two, 2);
+    // min = 2^bits
+    mpz_pow_ui(min, two, bits);
+    // min_a_8 = 2^(bits_a_8)
+    mpz_pow_ui(min_a_8, two, (bits + 8));
+    while (true) {
+        // result = rand(min, min_a_3)
+        mpz_urandomm(result, state, min_a_8);
+        // if (result % 2 == 0)
+        if (mpz_even_p(result)) {
+            // result += 1
+            mpz_add_ui(result, result, 1);
+        }
+        if (mpz_cmp(result, min) < 0) {
+            continue;
+        }
+        // if(result >= min && is_prime(result, iters))
+        if (is_prime(result, iters)) {
+            // p = result
+            break;
+            }
+    }
+    mpz_set(p, result);
+    mpz_clears(min, min_a_8, result, two, NULL);
+}
 
 
 
