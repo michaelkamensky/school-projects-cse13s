@@ -9,7 +9,7 @@ encrypt_objects = encrypt.o
 keygen_objects = keygen.o
 
 
-all: decrypt encrypt keygen randstate_ut numtheory_ut
+all: decrypt encrypt keygen randstate_ut numtheory_ut ss_ut
 
 decrypt: $(decrypt_objects)
 	$(CC) $(CFLAGS) -o $@ $(decrypt_objects)
@@ -45,6 +45,15 @@ numtheory_ut.o: numtheory_ut.c
 	$(CC) $(CFLAGS) -c $<
 
 numtheory_ut: numtheory.o numtheory_ut.o randstate.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
+
+ss.o: ss.c
+	$(CC) $(CFLAGS) -c $<
+
+ss_ut.o: ss_ut.c
+	$(CC) $(CFLAGS) -c $<
+
+ss_ut: ss.o ss_ut.o randstate.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
 
 
