@@ -146,3 +146,69 @@ void ss_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t pq){
     // m = pow_mod(c, d, pq)
     pow_mod(m, c, d, pq);
 }
+
+//
+// Encrypt an arbitrary file
+//
+// Provides:
+//  fills outfile with the encrypted contents of infile
+//
+// Requires:
+//  infile: open and readable file stream
+//  outfile: open and writable file stream
+//  n: public exponent and modulus
+//
+void ss_encrypt_file(FILE *infile, FILE *outfile, mpz_t n) {
+    mpz_t m, c, ntemp;
+    mpz_inits(m, c, ntemp, NULL);
+    // ntemp = n
+    mpz_set(ntemp, n);
+    // ntemp = sqrt(ntemp);
+    mpz_sqrt(ntemp, ntemp);
+    // ntemp = log(ntemp, 2)
+    size_t k = mpz_sizeinbase(ntemp, 2);
+    k = k - 1;
+    k = k / 8;
+    uint8_t *buffer = (uint8_t*) calloc(k, sizeof(uint8_t));
+    buffer[0] = 0xFF;
+    uint32_t j;
+    while (1) {
+        j = fread(&buffer[1], sizeof(uint8_t), k - 1, infile);
+        if (j == 0) {
+            break;
+        }
+        mpz_import(m, j + 1, 1, sizeof(uint8_t), 1, 0, buffer);
+        ss_encrypt(c, m, n);
+        gmp_fprintf(outfile, "%Zx\n", c);
+
+    }
+
+}
+
+//
+// Decrypt a file back into its original form.
+//
+// Provides:
+//  fills outfile with the unencrypted data from infile
+//
+// Requires:
+//  infile: open and readable file stream to encrypted data
+//  outfile: open and writable file stream
+//  d: private exponent
+//  pq: private modulus
+//
+void ss_decrypt_file(FILE *infile, FILE *outfile, mpz_t d, mpz_t pq) {
+    mpz_t c, m;
+    mpz_inits(c, m, NULL);
+    size_t k = mpz_sizeinbase(pq, 2);
+    k = k - 1;
+    k = k / 8;
+    uint8_t *buffer = (uint8_t*) calloc(k, sizeof(uint8_t));
+    size_t j;
+    while (EOF != gmp_fscanf(infile, "%Zx\n", c)) {
+        ss_decrypt(m, c, d, pq);
+        mpz_export(buffer, &j, 1, sizeof(uint8_t), 1, 0, m);
+        fwrite(&buffer[1], sizeof(uint8_t), j -1, outfile);
+    }
+}
+

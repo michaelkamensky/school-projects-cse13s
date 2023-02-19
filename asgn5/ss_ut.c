@@ -60,7 +60,38 @@ void test_ss(uint64_t nbits, uint64_t iters, uint32_t mv) {
 
 }
 
+void test_ss_file(uint64_t nbits, uint64_t iters, char *clear_file_name, char *enc_file_name, char *clear2_file_name) {
+    // publci key gen
+    mpz_t n, p, q;
+    mpz_inits(n, p, q, NULL);
+    ss_make_pub(p, q, n, nbits, iters);
+    gmp_printf("n = %Zd, p = %Zd, q = %Zd\n", n, p, q);
 
+    // private key gen
+    mpz_t d, pq;
+    mpz_inits(d, pq, NULL);
+    ss_make_priv(d, pq, p, q);
+    gmp_printf("p = %Zd, q = %Zd\n", p, q);
+    gmp_printf("d = %Zd, pq = %Zd\n", d, pq);
+
+    // open files
+    FILE *in_file = fopen(clear_file_name, "r");
+    FILE *out_file = fopen(enc_file_name, "w");
+
+    // run encrypt file
+    ss_encrypt_file(in_file, out_file, n);
+
+    //close files
+    fclose(in_file);
+    fclose(out_file);
+
+    // new files
+    in_file = fopen(enc_file_name, "r");
+    out_file = fopen(clear2_file_name, "w");
+
+    //run decrypt file
+    ss_decrypt_file(in_file, out_file, d, pq);
+}
 
 int main(int argc, char **argv) {
     FILE *f_out = fopen("test_out.txt", "w");
@@ -70,12 +101,14 @@ int main(int argc, char **argv) {
     test_ss_read_pub(f_in);
     fclose(f_in);
     randstate_init(1);
+    test_ss_file(1024, 50, "DESIGN2.pdf", "DESIGN_ENC.pdf", "DESIGN3.pdf");
+#if 0
     test_ss(256, 50, 1000000);
     test_ss(256, 50, 0); // not suppoused to encrypt
     test_ss(1024, 50, 1); // not suppoused to encrypt
     test_ss(1024, 50, 2);
     test_ss(2048, 100, 999999999);
-
+#endif
 #if 0
     test_ss_make_pub(30, 10);
     test_ss_make_pub(256, 20);
