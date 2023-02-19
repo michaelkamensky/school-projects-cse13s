@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <gmp.h>
+#include <sys/stat.h>
 
 #include "ss.h"
 #include "randstate.h"
@@ -76,6 +77,9 @@ int main(int argc, char **argv) {
     }
     FILE *private_key_file;
     private_key_file = fopen(private_key_file_name, "w");
+    // do it before write so no one can see my private key
+    int file_desc = fileno(private_key_file);
+    fchmod(file_desc, 0600);
     ss_write_priv(pq, d, private_key_file);
     fclose(private_key_file);
 
