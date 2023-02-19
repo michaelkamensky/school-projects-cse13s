@@ -115,6 +115,36 @@ void ss_make_priv(mpz_t d, mpz_t pq, mpz_t p, mpz_t q) {
 }
 
 //
+// Export SS private key to output stream
+//
+// Requires:
+//  pq: private modulus
+//  d:  private exponent
+//  pvfile: open and writable file stream
+//
+void ss_write_priv(mpz_t pq, mpz_t d, FILE *pvfile) {
+    gmp_fprintf(pvfile, "%Zx\n", pq);
+    gmp_fprintf(pvfile, "%Zx\n", d);
+}
+
+//
+// Import SS private key from input stream
+//
+// Provides:
+//  pq: private modulus
+//  d:  private exponent
+//
+// Requires:
+//  pvfile: open and readable file stream
+//  all mpz_t arguments to be initialized
+//
+void ss_read_priv(mpz_t pq, mpz_t d, FILE *pvfile) {
+    gmp_fscanf(pvfile, "%Zx\n", pq);
+    gmp_fscanf(pvfile, "%Zx\n", d);
+
+}
+
+//
 // Encrypt number m into number c
 //
 // Provides:

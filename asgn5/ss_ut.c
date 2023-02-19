@@ -25,6 +25,39 @@ void test_ss_read_pub(FILE *f) {
 
 }
 
+void test_ss_priv(uint64_t nbits, uint64_t iters, char *read_file_name, char *write_file_name) {
+    // publci key gen
+    mpz_t n, p, q;
+    mpz_inits(n, p, q, NULL);
+    ss_make_pub(p, q, n, nbits, iters);
+    //gmp_printf("n = %Zd, p = %Zd, q = %Zd\n", n, p, q);
+
+    // private key gen
+    mpz_t d, pq;
+    mpz_inits(d, pq, NULL);
+    //ss_make_priv(d, pq, p, q);
+    //gmp_printf("p = %Zd, q = %Zd\n", p, q);
+    //gmp_printf("d = %Zd, pq = %Zd\n", d, pq);
+
+    // open file to write
+    //FILE *out_file = fopen(write_file_name, "w");
+    FILE *out_file = fopen(write_file_name, "r");
+
+    // try write
+    //ss_write_priv(pq, d, out_file);
+    ss_read_priv(pq, d, out_file);
+    gmp_printf("d = %Zx, pq = %Zx\n", d, pq);
+
+
+
+    //close files
+    //fclose(in_file);
+    fclose(out_file);
+
+}
+
+
+
 void test_ss(uint64_t nbits, uint64_t iters, uint32_t mv) {
     // publci key gen
     mpz_t n, p, q;
@@ -101,7 +134,8 @@ int main(int argc, char **argv) {
     test_ss_read_pub(f_in);
     fclose(f_in);
     randstate_init(1);
-    test_ss_file(1024, 50, "DESIGN2.pdf", "DESIGN_ENC.pdf", "DESIGN3.pdf");
+    //test_ss_file(1024, 50, "DESIGN2.pdf", "DESIGN_ENC.pdf", "DESIGN3.pdf");
+    //test_ss_priv(1024, 50, "write_priv.txt", "read_priv.txt");
 #if 0
     test_ss(256, 50, 1000000);
     test_ss(256, 50, 0); // not suppoused to encrypt
