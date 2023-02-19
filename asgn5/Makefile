@@ -4,27 +4,27 @@ CC = clang
 #CFLAGS = -Wall -Wpedantic -Werror -Wextra -g 
 CFLAGS = -g
 LFLAGS = $(shell pkg-config --libs gmp)
-decrypt_objects = decrypt.o
-encrypt_objects = encrypt.o
-keygen_objects = keygen.o
+decrypt_objects = decrypt.o randstate.o numtheory.o ss.o
+encrypt_objects = encrypt.o randstate.o numtheory.o ss.o
+keygen_objects = keygen.o randstate.o numtheory.o ss.o
 
 
 all: decrypt encrypt keygen randstate_ut numtheory_ut ss_ut
 
 decrypt: $(decrypt_objects)
-	$(CC) $(CFLAGS) -o $@ $(decrypt_objects)
+	$(CC) $(CFLAGS) -o $@ $(decrypt_objects) $(LFLAGS)
 
 decrypt.o: decrypt.c
 	$(CC) $(CFLAGS) -c $<
 
 encrypt: $(encrypt_objects)
-	$(CC) $(CFLAGS) -o $@ $(encrypt_objects)
+	$(CC) $(CFLAGS) -o $@ $(encrypt_objects) $(LFLAGS)
 
 encrypt.o: encrypt.c
 	$(CC) $(CFLAGS) -c $<
 
 keygen: $(keygen_objects)
-	$(CC) $(CFLAGS) -o $@ $(keygen_objects)
+	$(CC) $(CFLAGS) -o $@ $(keygen_objects) $(LFLAGS)
 
 keygen.o: keygen.c
 	$(CC) $(CFLAGS) -c $<
@@ -58,7 +58,7 @@ ss_ut: ss.o ss_ut.o randstate.o numtheory.o
 
 
 clean:
-	rm -f decrypt encrypt keygen numtheory_ut randstate_ut *.o
+	rm -f decrypt encrypt keygen numtheory_ut randstate_ut ss_ut *.o
 
 format:
 	clang-format -i -style=file *.[ch]
