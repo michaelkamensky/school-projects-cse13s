@@ -22,7 +22,7 @@ void gcd(mpz_t g, const mpz_t a, const mpz_t b) {
     mpz_clears(t, btemp, atemp, NULL);
 }
 
-void mod_inverse(mpz_t o, const mpz_t a, const mpz_t n) { 
+void mod_inverse(mpz_t o, const mpz_t a, const mpz_t n) {
     bool t_return = true;
     mpz_t r, pr, t, pt, q, temp1, temp2, temp3;
     mpz_inits(r, pr, t, pt, q, temp1, temp2, temp3, NULL);
