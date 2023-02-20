@@ -57,6 +57,11 @@ int main(int argc, char **argv) {
     }
     FILE *public_key_file;
     public_key_file = fopen(public_key_file_name, "r");
+    if (public_key_file == NULL) {
+        fprintf(stderr, "Can not open %s file\n", public_key_file_name);
+        usage(argv[0]);
+        exit(-1);
+    }
     // reading pub_key_value
     ss_read_pub(n, username, public_key_file);
     fclose(public_key_file);
@@ -72,6 +77,11 @@ int main(int argc, char **argv) {
     FILE *in_file;
     if (in_file_name) {
         in_file = fopen(in_file_name, "r");
+        if (in_file == NULL) {
+            fprintf(stderr, "Can not open %s file\n", in_file_name);
+            usage(argv[0]);
+            exit(-1);
+        }
     } else {
         in_file = stdin;
     }

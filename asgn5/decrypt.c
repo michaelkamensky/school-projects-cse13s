@@ -55,6 +55,11 @@ int main(int argc, char **argv) {
     }
     FILE *private_key_file;
     private_key_file = fopen(private_key_file_name, "r");
+    if (private_key_file == NULL) {
+        fprintf(stderr, "Can not open %s file\n", private_key_file_name);
+        usage(argv[0]);
+        exit(-1);
+    }
     ss_read_priv(pq, d, private_key_file);
     fclose(private_key_file);
 
@@ -71,6 +76,11 @@ int main(int argc, char **argv) {
     FILE *in_file;
     if (in_file_name) {
         in_file = fopen(in_file_name, "r");
+        if (in_file == NULL) {
+            fprintf(stderr, "Can not open %s file\n", in_file_name);
+            usage(argv[0]);
+            exit(-1);
+        }
     } else {
         in_file = stdin;
     }
