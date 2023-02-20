@@ -112,6 +112,7 @@ void ss_make_priv(mpz_t d, mpz_t pq, mpz_t p, mpz_t q) {
     mpz_mul(n, pq, p);
     // d = mod_inverse(pq, lcm)
     mod_inverse(d, n, lcm);
+    mpz_clears( q_1, p_1, lcm, n, NULL);
 }
 
 //
@@ -214,6 +215,8 @@ void ss_encrypt_file(FILE *infile, FILE *outfile, mpz_t n) {
         gmp_fprintf(outfile, "%Zx\n", c);
 
     }
+    free(buffer);
+    mpz_clears(m, c, ntemp, NULL);
 
 }
 
@@ -242,5 +245,7 @@ void ss_decrypt_file(FILE *infile, FILE *outfile, mpz_t d, mpz_t pq) {
         mpz_export(buffer, &j, 1, sizeof(uint8_t), 1, 0, m);
         fwrite(&buffer[1], sizeof(uint8_t), j -1, outfile);
     }
+    free(buffer);
+    mpz_clears(c, m, NULL);
 }
 
