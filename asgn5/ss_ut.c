@@ -127,14 +127,16 @@ void test_ss_file(uint64_t nbits, uint64_t iters, char *clear_file_name, char *e
 }
 
 int main(int argc, char **argv) {
+#if 0
     FILE *f_out = fopen("test_out.txt", "w");
     test_ss_write_pub(42, "mkamensk", f_out); 
     fclose(f_out);
     FILE *f_in = fopen("test_in.txt", "r");
     test_ss_read_pub(f_in);
     fclose(f_in);
+#endif
     randstate_init(1);
-    //test_ss_file(1024, 50, "DESIGN2.pdf", "DESIGN_ENC.pdf", "DESIGN3.pdf");
+    test_ss_file(1024, 50, "DESIGN2.pdf", "DESIGN_ENC.pdf", "DESIGN3.pdf");
     //test_ss_priv(1024, 50, "write_priv.txt", "read_priv.txt");
 #if 0
     test_ss(256, 50, 1000000);

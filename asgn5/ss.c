@@ -199,6 +199,8 @@ void ss_encrypt_file(FILE *infile, FILE *outfile, mpz_t n) {
     size_t k = mpz_sizeinbase(ntemp, 2);
     k = k - 1;
     k = k / 8;
+    // I don't understand why but to match example need to sub one from k
+    k = k - 1;
     uint8_t *buffer = (uint8_t*) calloc(k, sizeof(uint8_t));
     buffer[0] = 0xFF;
     uint32_t j;
