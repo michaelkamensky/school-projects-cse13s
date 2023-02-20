@@ -25,14 +25,14 @@ void gcd(mpz_t g, mpz_t a, mpz_t b) {
 void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     bool t_return = true;
     mpz_t r, pr, t, pt, q, temp1, temp2, temp3;
-    mpz_inits(r, pr, t, pt, q, temp1, temp2, temp3, NULL);    
+    mpz_inits(r, pr, t, pt, q, temp1, temp2, temp3, NULL);
     mpz_set(r, n);
     mpz_set(pr, a);
     mpz_set_ui(t, 0);
     mpz_set_ui(pt, 1);
     while (mpz_cmp_ui(pr, 0) != 0) {
         mpz_fdiv_q(q, r, pr);
-       
+
         mpz_set(temp1, pr);
         mpz_mul(temp2, q, pr);
         mpz_sub(temp3, r, temp2);
@@ -52,13 +52,13 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     }
     if (mpz_cmp_ui(t, 0) < 0) {
         mpz_add(t, t, n);
-        mpz_set(o,t);
+        mpz_set(o, t);
         t_return = false;
     }
     if (t_return) {
         mpz_set(o, t);
     }
-    mpz_clears(r, pr, t, pt, q, temp1, temp2, temp3, NULL);    
+    mpz_clears(r, pr, t, pt, q, temp1, temp2, temp3, NULL);
 }
 
 void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
@@ -68,7 +68,7 @@ void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
     mpz_set(p, a);
     mpz_set(dtemp, d);
     while (mpz_cmp_ui(dtemp, 0) > 0) {
-        if(mpz_odd_p(dtemp)) {
+        if (mpz_odd_p(dtemp)) {
             mpz_mul(vxp, v, p);
             mpz_mod(v, vxp, n);
         }
@@ -148,7 +148,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 }
 
 void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
-    mpz_t  min, min_a_8, bits_a_8, result, two;
+    mpz_t min, min_a_8, bits_a_8, result, two;
     mpz_inits(min, min_a_8, bits_a_8, result, two, NULL);
     // two = 2
     mpz_set_ui(two, 2);
@@ -171,11 +171,8 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
         if (is_prime(result, iters)) {
             // p = result
             break;
-            }
+        }
     }
     mpz_set(p, result);
     mpz_clears(min, min_a_8, result, two, NULL);
 }
-
-
-

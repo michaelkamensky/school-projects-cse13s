@@ -11,7 +11,6 @@
 #include "randstate.h"
 #include "numtheory.h"
 
-
 void usage(char *exec) {
     fprintf(stderr,
         "SYNOPSIS\n"
@@ -38,9 +37,7 @@ int main(int argc, char **argv) {
     while ((c = getopt(argc, argv, "hvn:i:o:")) != -1) {
         switch (c) {
         case 'v': verbose = true; break;
-        case 'n':
-            public_key_file_name = strdup(optarg); 
-            break;
+        case 'n': public_key_file_name = strdup(optarg); break;
         case 'i': in_file_name = strdup(optarg); break;
         case 'o': out_file_name = strdup(optarg); break;
         default: usage(argv[0]); exit(-1);
@@ -92,10 +89,10 @@ int main(int argc, char **argv) {
     } else {
         out_file = stdout;
     }
-    
-    // encrpyt files 
+
+    // encrpyt files
     ss_encrypt_file(in_file, out_file, n);
-    
+
     if (out_file_name) {
         fclose(out_file);
     }

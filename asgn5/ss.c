@@ -19,7 +19,6 @@
 void ss_write_pub(mpz_t n, char username[], FILE *pbfile) {
     gmp_fprintf(pbfile, "%Zx\n", n);
     fprintf(pbfile, "%s\n", username);
-
 }
 
 //
@@ -35,7 +34,7 @@ void ss_write_pub(mpz_t n, char username[], FILE *pbfile) {
 //  all mpz_t arguments to be initialized
 //
 void ss_read_pub(mpz_t n, char username[], FILE *pbfile) {
-    gmp_fscanf(pbfile, "%Zx\n", n); 
+    gmp_fscanf(pbfile, "%Zx\n", n);
     fscanf(pbfile, "%s\n", username);
 }
 
@@ -53,13 +52,13 @@ void ss_read_pub(mpz_t n, char username[], FILE *pbfile) {
 //  all mpz_t arguments to be initialized
 //
 void ss_make_pub(mpz_t p, mpz_t q, mpz_t n, uint64_t nbits, uint64_t iters) {
-    mpz_t q_1, p_1, pp, mod1, mod2;    
-    mpz_inits( q_1, p_1, pp, mod1, mod2, NULL);
-    uint64_t upper = ((2*nbits)/5);
-    uint64_t lower = (nbits/5);
+    mpz_t q_1, p_1, pp, mod1, mod2;
+    mpz_inits(q_1, p_1, pp, mod1, mod2, NULL);
+    uint64_t upper = ((2 * nbits) / 5);
+    uint64_t lower = (nbits / 5);
     // generates a random value from lower to upper
     uint64_t p_bits = (rand() % (upper - lower + 1)) + lower;
-    uint64_t q_bits = nbits - (2*p_bits);
+    uint64_t q_bits = nbits - (2 * p_bits);
     while (true) {
         // make p prime
         make_prime(p, p_bits, iters);
@@ -82,7 +81,7 @@ void ss_make_pub(mpz_t p, mpz_t q, mpz_t n, uint64_t nbits, uint64_t iters) {
     mpz_pow_ui(pp, p, 2);
     // n = pp * q
     mpz_mul(n, pp, q);
-    mpz_clears( q_1, p_1, pp, mod1, mod2, NULL);
+    mpz_clears(q_1, p_1, pp, mod1, mod2, NULL);
 }
 
 //
@@ -99,7 +98,7 @@ void ss_make_pub(mpz_t p, mpz_t q, mpz_t n, uint64_t nbits, uint64_t iters) {
 //
 void ss_make_priv(mpz_t d, mpz_t pq, mpz_t p, mpz_t q) {
     mpz_t q_1, p_1, lcm, n;
-    mpz_inits( q_1, p_1, lcm, n, NULL);
+    mpz_inits(q_1, p_1, lcm, n, NULL);
     // p_1 = p - 1
     mpz_sub_ui(p_1, p, 1);
     // q_1 = q - 1
@@ -112,7 +111,7 @@ void ss_make_priv(mpz_t d, mpz_t pq, mpz_t p, mpz_t q) {
     mpz_mul(n, pq, p);
     // d = mod_inverse(pq, lcm)
     mod_inverse(d, n, lcm);
-    mpz_clears( q_1, p_1, lcm, n, NULL);
+    mpz_clears(q_1, p_1, lcm, n, NULL);
 }
 
 //
@@ -142,7 +141,6 @@ void ss_write_priv(mpz_t pq, mpz_t d, FILE *pvfile) {
 void ss_read_priv(mpz_t pq, mpz_t d, FILE *pvfile) {
     gmp_fscanf(pvfile, "%Zx\n", pq);
     gmp_fscanf(pvfile, "%Zx\n", d);
-
 }
 
 //
@@ -173,7 +171,7 @@ void ss_encrypt(mpz_t c, mpz_t m, mpz_t n) {
 //  pq: private modulus
 //  all mpz_t arguments to be initialized
 //
-void ss_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t pq){
+void ss_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t pq) {
     // m = pow_mod(c, d, pq)
     pow_mod(m, c, d, pq);
 }
@@ -202,7 +200,7 @@ void ss_encrypt_file(FILE *infile, FILE *outfile, mpz_t n) {
     k = k / 8;
     // I don't understand why but to match example need to sub one from k
     k = k - 1;
-    uint8_t *buffer = (uint8_t*) calloc(k, sizeof(uint8_t));
+    uint8_t *buffer = (uint8_t *) calloc(k, sizeof(uint8_t));
     buffer[0] = 0xFF;
     uint32_t j;
     while (1) {
@@ -213,11 +211,9 @@ void ss_encrypt_file(FILE *infile, FILE *outfile, mpz_t n) {
         mpz_import(m, j + 1, 1, sizeof(uint8_t), 1, 0, buffer);
         ss_encrypt(c, m, n);
         gmp_fprintf(outfile, "%Zx\n", c);
-
     }
     free(buffer);
     mpz_clears(m, c, ntemp, NULL);
-
 }
 
 //
@@ -238,14 +234,13 @@ void ss_decrypt_file(FILE *infile, FILE *outfile, mpz_t d, mpz_t pq) {
     size_t k = mpz_sizeinbase(pq, 2);
     k = k - 1;
     k = k / 8;
-    uint8_t *buffer = (uint8_t*) calloc(k, sizeof(uint8_t));
+    uint8_t *buffer = (uint8_t *) calloc(k, sizeof(uint8_t));
     size_t j;
     while (EOF != gmp_fscanf(infile, "%Zx\n", c)) {
         ss_decrypt(m, c, d, pq);
         mpz_export(buffer, &j, 1, sizeof(uint8_t), 1, 0, m);
-        fwrite(&buffer[1], sizeof(uint8_t), j -1, outfile);
+        fwrite(&buffer[1], sizeof(uint8_t), j - 1, outfile);
     }
     free(buffer);
     mpz_clears(c, m, NULL);
 }
-

@@ -22,7 +22,6 @@ void test_gcd(uint32_t av, uint32_t bv) {
     mpz_set_ui(b, bv);
     gcd(o, a, b);
     gmp_printf("gcd(%Zd, %Zd, %Zd)\n", o, a, b);
-
 }
 
 void test_mod_inverse(uint32_t av, uint32_t bv) {
@@ -32,7 +31,6 @@ void test_mod_inverse(uint32_t av, uint32_t bv) {
     mpz_set_ui(b, bv);
     mod_inverse(o, a, b);
     gmp_printf("mod_inverse(%Zd, %Zd, %Zd)\n", o, a, b);
-
 }
 
 void test_is_prime(uint32_t av, uint32_t iterations) {
@@ -42,7 +40,6 @@ void test_is_prime(uint32_t av, uint32_t iterations) {
     mpz_set_ui(a, av);
     o = is_prime(a, iterations);
     gmp_printf("is_prime(%Zd, %d) = %d\n", a, iterations, o);
-
 }
 
 void test_make_prime(uint64_t bits, uint64_t iterations) {
@@ -50,9 +47,7 @@ void test_make_prime(uint64_t bits, uint64_t iterations) {
     mpz_inits(a, NULL);
     make_prime(a, bits, iterations);
     gmp_printf("make_prime(%Zd, %d %d)\n", a, bits, iterations);
-
 }
-
 
 int main(void) {
 #if 0
@@ -71,7 +66,7 @@ int main(void) {
     test_gcd(9, 18);
     test_gcd(137 * 5* 6, 137 * 7);
 #endif
-# if 0
+#if 0
     test_mod_inverse(3, 26);
     test_mod_inverse(3, 11);
     test_mod_inverse(17, 23);
@@ -113,4 +108,3 @@ int main(void) {
 #endif
     return 0;
 }
-

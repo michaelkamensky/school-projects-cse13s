@@ -36,22 +36,20 @@ int main(int argc, char **argv) {
     while ((c = getopt(argc, argv, "hvn:i:o:")) != -1) {
         switch (c) {
         case 'v': verbose = true; break;
-        case 'n':
-            private_key_file_name = strdup(optarg); 
-            break;
+        case 'n': private_key_file_name = strdup(optarg); break;
         case 'i': in_file_name = strdup(optarg); break;
         case 'o': out_file_name = strdup(optarg); break;
         default: usage(argv[0]); exit(-1);
         }
     }
 
-    // intializing the vars 
+    // intializing the vars
     mpz_t pq, d;
     mpz_inits(pq, d, NULL);
 
     // open the private keyfile
     if (!private_key_file_name) {
-    private_key_file_name = strdup("ss.priv");
+        private_key_file_name = strdup("ss.priv");
     }
     FILE *private_key_file;
     private_key_file = fopen(private_key_file_name, "r");
@@ -70,7 +68,6 @@ int main(int argc, char **argv) {
         size_t d_bits = mpz_sizeinbase(d, 2);
         gmp_printf("d  (%zu bits) = %Zd\n", d_bits, d);
     }
-
 
     // open the files
     FILE *in_file;
@@ -93,7 +90,7 @@ int main(int argc, char **argv) {
     }
 
     // decrypt the files
-    ss_decrypt_file(in_file, out_file, d, pq); 
+    ss_decrypt_file(in_file, out_file, d, pq);
 
     // close the files
     if (out_file_name) {

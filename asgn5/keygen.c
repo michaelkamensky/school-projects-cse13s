@@ -22,7 +22,8 @@ void usage(char *exec) {
         "\n"
         "OPTIONS\n"
         "    -b : specifies the minimum bits needed for the public modulus n\n"
-        "    -i : specifies the number of Miller-Rabin iterations for testing primes (default: 50)\n"
+        "    -i : specifies the number of Miller-Rabin iterations for testing primes (default: "
+        "50)\n"
         "    -n pbfile : specifies the public key file (default: ss.pub)\n"
         "    -d pvfile : specifies the private key file (default: ss.priv)\n"
         "    -s : specifies the random seed for the random state initialization\n"
@@ -42,12 +43,8 @@ int main(int argc, char **argv) {
     while ((c = getopt(argc, argv, "b:i:n:d:s:vh")) != -1) {
         switch (c) {
         case 'v': verbose = true; break;
-        case 'd':
-            private_key_file_name = strdup(optarg); 
-            break;
-        case 'n':
-            public_key_file_name = strdup(optarg); 
-            break;
+        case 'd': private_key_file_name = strdup(optarg); break;
+        case 'n': public_key_file_name = strdup(optarg); break;
         case 'i': iterations = (uint32_t) strtoul(optarg, NULL, 10); break;
         case 'b': min_bits = (uint32_t) strtoul(optarg, NULL, 10); break;
         case 's': seed = (uint32_t) strtoul(optarg, NULL, 10); break;

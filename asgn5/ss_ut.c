@@ -10,8 +10,6 @@ void test_ss_write_pub(uint32_t av, char username[], FILE *f) {
     mpz_set_ui(n, av);
     ss_write_pub(n, username, f);
     mpz_clears(n, NULL);
-
-
 }
 
 void test_ss_read_pub(FILE *f) {
@@ -22,7 +20,6 @@ void test_ss_read_pub(FILE *f) {
     gmp_printf("%Zd\n", n);
     printf("%s\n", username);
     mpz_clears(n, NULL);
-
 }
 
 void test_ss_priv(uint64_t nbits, uint64_t iters, char *write_file_name) {
@@ -48,15 +45,10 @@ void test_ss_priv(uint64_t nbits, uint64_t iters, char *write_file_name) {
     ss_read_priv(pq, d, out_file);
     gmp_printf("d = %Zx, pq = %Zx\n", d, pq);
 
-
-
     //close files
     //fclose(in_file);
     fclose(out_file);
-
 }
-
-
 
 void test_ss(uint64_t nbits, uint64_t iters, uint32_t mv) {
     // publci key gen
@@ -85,15 +77,14 @@ void test_ss(uint64_t nbits, uint64_t iters, uint32_t mv) {
     ss_decrypt(out, c, d, pq);
     gmp_printf("ss_decrypt(%Zd, %Zd, %Zd, %Zd)\n", out, c, d, pq);
 
-
     mpz_clears(d, pq, NULL);
     mpz_clears(n, p, q, NULL);
     mpz_clears(c, m, NULL);
     mpz_clears(out, NULL);
-
 }
 
-void test_ss_file(uint64_t nbits, uint64_t iters, char *clear_file_name, char *enc_file_name, char *clear2_file_name) {
+void test_ss_file(uint64_t nbits, uint64_t iters, char *clear_file_name, char *enc_file_name,
+    char *clear2_file_name) {
     // publci key gen
     mpz_t n, p, q;
     mpz_inits(n, p, q, NULL);
@@ -155,4 +146,3 @@ int main(void) {
 
     return 0;
 }
-
