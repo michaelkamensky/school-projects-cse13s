@@ -54,7 +54,7 @@ void test_make_prime(uint64_t bits, uint64_t iterations) {
 }
 
 
-int main(int argc, char **argv) {
+int main(void) {
 #if 0
     test_pow_mod(111, 17, 137);
     test_pow_mod(41, 2, 137);

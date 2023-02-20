@@ -109,7 +109,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
         // s = s + 1
         mpz_add_ui(s, s, 1);
     }
-    for (int i = 0; i < iters; i++) {
+    for (uint64_t i = 0; i < iters; i++) {
         // choose random a (2,3,...,n-2)
         // gives between 0 and n-4 inclusive
         mpz_urandomm(a, state, n_3);

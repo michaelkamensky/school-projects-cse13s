@@ -1,8 +1,8 @@
 SHELL := /bin/sh
 CC = clang
 #CC = gcc
-#CFLAGS = -Wall -Wpedantic -Werror -Wextra -g 
-CFLAGS = -g
+CFLAGS = -Wall -Wpedantic -Werror -Wextra -g $(shell pkg-config --cflags gmp)
+#CFLAGS = -g
 LFLAGS = $(shell pkg-config --libs gmp)
 decrypt_objects = decrypt.o randstate.o numtheory.o ss.o
 encrypt_objects = encrypt.o randstate.o numtheory.o ss.o

@@ -25,7 +25,7 @@ void test_ss_read_pub(FILE *f) {
 
 }
 
-void test_ss_priv(uint64_t nbits, uint64_t iters, char *read_file_name, char *write_file_name) {
+void test_ss_priv(uint64_t nbits, uint64_t iters, char *write_file_name) {
     // publci key gen
     mpz_t n, p, q;
     mpz_inits(n, p, q, NULL);
@@ -126,7 +126,7 @@ void test_ss_file(uint64_t nbits, uint64_t iters, char *clear_file_name, char *e
     ss_decrypt_file(in_file, out_file, d, pq);
 }
 
-int main(int argc, char **argv) {
+int main(void) {
 #if 0
     FILE *f_out = fopen("test_out.txt", "w");
     test_ss_write_pub(42, "mkamensk", f_out); 
