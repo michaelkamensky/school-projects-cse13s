@@ -8,7 +8,7 @@
 #include "numtheory.h"
 #include "randstate.h"
 
-void gcd(mpz_t g, mpz_t a, mpz_t b) {
+void gcd(mpz_t g, const mpz_t a, const mpz_t b) {
     mpz_t t, atemp, btemp;
     mpz_inits(t, atemp, btemp, NULL);
     mpz_set(atemp, a);
@@ -22,7 +22,7 @@ void gcd(mpz_t g, mpz_t a, mpz_t b) {
     mpz_clears(t, btemp, atemp, NULL);
 }
 
-void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
+void mod_inverse(mpz_t o, const mpz_t a, const mpz_t n) { 
     bool t_return = true;
     mpz_t r, pr, t, pt, q, temp1, temp2, temp3;
     mpz_inits(r, pr, t, pt, q, temp1, temp2, temp3, NULL);
@@ -61,7 +61,7 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     mpz_clears(r, pr, t, pt, q, temp1, temp2, temp3, NULL);
 }
 
-void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
+void pow_mod(mpz_t o, const mpz_t a, const mpz_t d, const mpz_t n) {
     mpz_t p, v, vxp, pxp, dtemp;
     mpz_inits(p, v, vxp, pxp, dtemp, NULL);
     mpz_set_ui(v, 1);
@@ -80,7 +80,7 @@ void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
     mpz_clears(p, v, vxp, pxp, dtemp, NULL);
 }
 
-bool is_prime(mpz_t n, uint64_t iters) {
+bool is_prime(const mpz_t n, uint64_t iters) {
     // special cases
     if ((mpz_cmp_ui(n, 0) == 0) || (mpz_cmp_ui(n, 1) == 0)) {
         return false;
