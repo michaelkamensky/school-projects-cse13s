@@ -15,7 +15,7 @@
 void usage(char *exec) {
     fprintf(stderr,
         "SYNOPSIS\n"
-        "   Runs the game of life\n"
+        "   Creates a public and private key\n"
         "\n"
         "USAGE\n"
         "   %s [options] \n"

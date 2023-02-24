@@ -14,14 +14,14 @@
 void usage(char *exec) {
     fprintf(stderr,
         "SYNOPSIS\n"
-        "   Decrypts file\n"
+        "   encrypts file\n"
         "\n"
         "USAGE\n"
         "   %s [options] \n"
         "\n"
         "OPTIONS\n"
-        "    -i input : specifices the input file to decrypt (default: stdin)\n"
-        "    -o output : specifies the output file to decrypt (default: stdout)\n"
+        "    -i input : specifices the input file to encrypt (default: stdin)\n"
+        "    -o output : specifies the output file to encrypt (default: stdout)\n"
         "    -n : specifies the file containing the public key (default: ss.pub)\n"
         "    -v : enables verbose output\n"
         "    -h : display program help and usage.\n",
