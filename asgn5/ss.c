@@ -113,7 +113,7 @@ void ss_make_priv(mpz_t d, mpz_t pq, const mpz_t p, const mpz_t q) {
     mpz_mul(n, pq, p);
     // d = mod_inverse(pq, lcm)
     mod_inverse(d, n, lcm);
-    mpz_clears(q_1, p_1, lcm, n, NULL);
+    mpz_clears(q_1, p_1, lcm, n, p_1_x_q_1, g_c_d, NULL);
 }
 
 //
