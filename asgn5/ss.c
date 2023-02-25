@@ -97,14 +97,16 @@ void ss_make_pub(mpz_t p, mpz_t q, mpz_t n, uint64_t nbits, uint64_t iters) {
 //  all mpz_t arguments to be initialized
 //
 void ss_make_priv(mpz_t d, mpz_t pq, const mpz_t p, const mpz_t q) {
-    mpz_t q_1, p_1, lcm, n;
-    mpz_inits(q_1, p_1, lcm, n, NULL);
+    mpz_t q_1, p_1, lcm, n, p_1_x_q_1, g_c_d;
+    mpz_inits(q_1, p_1, lcm, n, p_1_x_q_1, g_c_d, NULL);
     // p_1 = p - 1
     mpz_sub_ui(p_1, p, 1);
     // q_1 = q - 1
     mpz_sub_ui(q_1, q, 1);
     // lcm = lcm(p_1, q_1)
-    mpz_lcm(lcm, p_1, q_1);
+    gcd(g_c_d, p_1, q_1);
+    mpz_mul(p_1_x_q_1, p_1, q_1);
+    mpz_fdiv_q(lcm, p_1_x_q_1, g_c_d);
     // pq = p * q
     mpz_mul(pq, p, q);
     // n = n * pq
