@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
     }
 
     // if statistics is true then print of the values
-    if (verbose) {
+    if (statistics) {
         // write the stats here
     }
 
