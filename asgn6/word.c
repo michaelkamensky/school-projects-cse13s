@@ -35,3 +35,14 @@ WordTable *wt_create(void) {
     wordtable[EMPTY_CODE] = empty;
     return wordtable;
 }
+
+void wt_reset(WordTable *wt) {
+    for (uint32_t i = 2; i < MAX_CODE; i++) {
+        // check if the position is not null
+        if (wt[i] != NULL) {
+            // if not null clears the word
+            word_delete(wt[i]);
+            wt[i] = NULL;
+        }
+    }
+}
