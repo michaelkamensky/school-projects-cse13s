@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "trie.h"
+#include "code.h"
 
 //struct TrieNode {
     //TrieNode *children[ALPHABET];
@@ -19,13 +20,25 @@ void trie_node_delete(TrieNode *n) {
 }
 
 TrieNode *trie_create(void) {
-    TrieNode *initial = trie_node_create(0);
-    if (initial->code == 0) {
-        return initial;
-    } else {
-        return NULL;
-    }
-   
+    return trie_node_create(EMPTY_CODE); 
 }
 
+void trie_reset(TrieNode *root) {
+    for (int i = 0; i < ALPHABET; i++) {
+        trie_node_delete(root->children[i]);
+        root->children[i] = NULL;
+    }
+}
 
+void trie_delete(TrieNode *n) {
+    for (int i = 0; i < ALPHABET; i++) {
+        if ( n->children[i] != NULL) {
+            trie_delete(n->children[i]);
+        }
+    }
+    trie_reset(n); 
+}
+
+TrieNode *trie_step(TrieNode *n, uint8_t sym) {
+    return n->children[sym];
+}
