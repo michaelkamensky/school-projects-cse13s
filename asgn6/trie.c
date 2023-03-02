@@ -4,10 +4,6 @@
 #include "trie.h"
 #include "code.h"
 
-//struct TrieNode {
-    //TrieNode *children[ALPHABET];
-    //uint16_t code;
-//};
 
 TrieNode *trie_node_create(uint16_t index) {
     TrieNode *trie_node = (TrieNode *) calloc(1, sizeof(TrieNode));

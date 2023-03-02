@@ -2,11 +2,12 @@ SHELL := /bin/sh
 #CC = clang
 CC = gcc
 CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
+CFLAGS += -Wno-error=unused-variable
 #CFLAGS = -g
 encode_objects = encode.o trie.o
 decode_objects = decode.o trie.o
 
-all: encode decode trie_ut
+all: encode decode trie_ut word_ut
 
 encode: $(encode_objects)
 	$(CC) $(CFLAGS) -o $@ $(encode_objects)
@@ -23,15 +24,23 @@ decode.o: decode.c
 trie.o: trie.c
 	$(CC) $(CFLAGS) -c trie.c
 
-trie_ut: trie_ut.o
+trie_ut: trie_ut.o trie.o
 	$(CC) $(CFLAGS) -o $@ trie_ut.o trie.o
 
 trie_ut.o: trie_ut.c
 	$(CC) $(CFLAGS) -c trie_ut.c
 
+word_ut: word_ut.o word.o
+	$(CC) $(CFLAGS) -o $@ word_ut.o word.o
+
+word_ut.o: word_ut.c
+	$(CC) $(CFLAGS) -c word_ut.c
+
+word.o: word.c
+	$(CC) $(CFLAGS) -c word.c
 
 clean:
-	rm -f encode decode trie_ut *.o
+	rm -f encode decode trie_ut word_ut *.o
 
 format:
 	clang-format -i -style=file *.[ch]
