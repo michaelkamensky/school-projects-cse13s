@@ -10,12 +10,17 @@ uint64_t total_syms;
 uint64_t total_bits;
 
 int read_bytes(int infile, uint8_t *buf, int to_read) {
-    int result = 0;
-    ssize_t bytes_read = read(infile, buf, to_read);
-    result = (int) bytes_read;
-    while (result > ) {
-        bytes_read = read(infile, buf, to_read);
-         result += (int) bytes_read;
+    ssize_t bytes_read;
+    int total_read = 0;
+    while (1) {
+        bytes_read = read(infile, buf + total_read, to_read - total_read);
+        total_read += bytes_read;
+        if (bytes_read == 0) {
+            break;
+        }
+        if (total_read == to_read) {
+            break;
+        }
     }
-    return result;
+    return total_read;
 }
