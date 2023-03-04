@@ -143,6 +143,38 @@ void write_pair(int outfile, uint16_t code, uint8_t sym, int bitlen) {
     }
 }
 
+bool read_pair(int infile, uint16_t *code, uint8_t *sym, int bitlen) {
+    uint16_t code_val = 0;
+    uint8_t sym_val = 0;
+    for (int i = 0; i < bitlen; i++) {
+        uint8_t b = read_bit(infile);
+        if (b == 2){
+            // should not happen
+            return false;
+        }
+        if (b == 1){
+            code_val = code_val | (1 << i);
+        }
+    }
+    for (int i = 0; i < 8; i++) {
+        uint8_t b = read_bit(infile);
+        if (b == 2){
+            // should not happen
+            return false;
+        }
+        if (b == 1){
+            sym_val = sym_val | (1 << i);
+        }
+    }
+    *code = code_val;
+    *sym = sym_val;
+    if (code_val == STOP_CODE) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 void flush_pairs(int outfile) {
     size_t write_size = write_current_bit / 8;
     if (write_current_bit % 8 != 0) {
@@ -156,7 +188,7 @@ void flush_pairs(int outfile) {
 
 void test_write_bit(int out_fd) {
 #if 1
-    write_pair(out_fd, 1, 0x74, 2);
+    write_pair(out_fd, EMPTY_CODE, 0x74, 2);
 #else
     write_bit(out_fd, 1);
     write_bit(out_fd, 0);
@@ -171,7 +203,7 @@ void test_write_bit(int out_fd) {
     write_bit(out_fd, 0);
 #endif
 #if 1
-    write_pair(out_fd, 1, 0x68, 2);
+    write_pair(out_fd, EMPTY_CODE, 0x68, 2);
 #else
     write_bit(out_fd, 1);
     write_bit(out_fd, 0);
@@ -185,9 +217,11 @@ void test_write_bit(int out_fd) {
     write_bit(out_fd, 1);
     write_bit(out_fd, 0);
 #endif
+    write_pair(out_fd, STOP_CODE, 0, 3);
 }
 
 void test_read_bit(int in_fd) {
+#if 0
     uint8_t b;
     for (int i = 0; i < 1024; i++){
         b = read_bit(in_fd);
@@ -196,5 +230,25 @@ void test_read_bit(int in_fd) {
             break;
         }
     }
+#endif
+    uint16_t code;
+    uint8_t sym;
+    bool ret;
+    ret = read_pair(in_fd, &code, &sym, 2);
+    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    if (!ret) {
+        return;
+    }
+    ret = read_pair(in_fd, &code, &sym, 2);
+    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    if (!ret) {
+        return;
+    }
+    ret = read_pair(in_fd, &code, &sym, 3);
+    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    if (!ret) {
+        return;
+    }
+
 }
 
