@@ -3,8 +3,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "word.h"
+#include "io.h"
 #include "code.h"
+#include "endian.h"
 
 uint64_t total_syms;
 uint64_t total_bits;
@@ -49,4 +50,28 @@ int write_bytes(int outfile, uint8_t *buf, int to_write) {
         }
     }
     return total_wrote;
+}
+
+void write_header(int outfile, FileHeader *header) {
+    FileHeader h = *header;
+#if 0
+    h->magic = header->magic;
+    h->protection = header->protection;
+#endif
+    if (big_endian()) {
+       h.magic = swap32(h.magic);
+       h.protection = swap32(h.protection);
+ 
+    }
+    write_bytes(outfile, (uint8_t *)&h, sizeof(FileHeader)); 
+}
+
+void read_header(int infile, FileHeader *header) {
+    read_bytes(infile, (uint8_t *)header, sizeof(FileHeader));
+    if (big_endian()) {
+        // big endian
+        header->magic = swap32(header->magic);
+        header->protection = swap16(header->protection);
+    }
+
 }

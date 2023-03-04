@@ -2,7 +2,7 @@ SHELL := /bin/sh
 #CC = clang
 CC = gcc
 CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
-CFLAGS += -Wno-error=unused-variable
+CFLAGS += -Wno-error=unused-variable -Wno-error=unused-parameter
 #CFLAGS = -g
 encode_objects = encode.o trie.o
 decode_objects = decode.o trie.o
