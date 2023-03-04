@@ -73,5 +73,128 @@ void read_header(int infile, FileHeader *header) {
         header->magic = swap32(header->magic);
         header->protection = swap16(header->protection);
     }
-
 }
+
+//#undef BLOCK
+//#define BLOCK 2
+
+static uint8_t write_buf[BLOCK];
+static size_t write_current_bit;
+
+static void write_bit(int out_fd, uint8_t b) {
+    size_t byte_addr = write_current_bit / 8;
+    int bit_addr = write_current_bit % 8;
+    write_buf[byte_addr] = write_buf[byte_addr] | (b << bit_addr);
+    write_current_bit += 1;
+    if (write_current_bit == BLOCK * 8) {
+        write_bytes(out_fd, write_buf, BLOCK);
+        write_current_bit = 0;
+        memset( write_buf, 0, BLOCK);
+    }
+}
+
+static uint8_t read_buf[BLOCK];
+static size_t read_buf_size;
+static size_t read_current_bit;
+
+static uint8_t read_bit(int in_fd) {
+    uint8_t b = 2;
+
+    if (read_current_bit == 0) {
+        read_buf_size = read_bytes(in_fd, read_buf, BLOCK);
+        if (read_buf_size == 0) {
+            // end of file
+            return b;
+        }
+    }
+
+    size_t byte_addr = read_current_bit / 8;
+    int bit_addr = read_current_bit % 8;
+
+    if (byte_addr < read_buf_size) {
+        b = read_buf[byte_addr] & (1 << bit_addr);
+        if (b != 0){
+            b = 1;
+        }
+        read_current_bit += 1;
+    }
+    if (read_current_bit == read_buf_size * 8) {
+        read_current_bit = 0;
+        memset(read_buf, 0, BLOCK);
+    }
+    return b;
+}
+
+
+void write_pair(int outfile, uint16_t code, uint8_t sym, int bitlen) {
+    for (int i = 0; i < bitlen; i++) {
+        uint8_t b = code & (1 << i);
+        if (b != 0) {
+            b = 1;
+        }
+        write_bit(outfile, b);
+    }
+    for (int i = 0; i < 8; i++) {
+        uint8_t b = sym & (1 << i);
+        if (b != 0) {
+            b = 1;
+        }
+        write_bit(outfile, b);
+    }
+}
+
+void flush_pairs(int outfile) {
+    size_t write_size = write_current_bit / 8;
+    if (write_current_bit % 8 != 0) {
+        write_size += 1;
+    }
+    write_bytes(outfile, write_buf, write_size);
+    write_current_bit = 0;
+    memset( write_buf, 0, BLOCK);
+}
+
+
+void test_write_bit(int out_fd) {
+#if 1
+    write_pair(out_fd, 1, 0x74, 2);
+#else
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 0);
+
+    write_bit(out_fd, 0);
+    write_bit(out_fd, 0);
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 0);
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 0);
+#endif
+#if 1
+    write_pair(out_fd, 1, 0x68, 2);
+#else
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 0);
+    
+    write_bit(out_fd, 0);
+    write_bit(out_fd, 0);
+    write_bit(out_fd, 0);
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 0);
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 1);
+    write_bit(out_fd, 0);
+#endif
+}
+
+void test_read_bit(int in_fd) {
+    uint8_t b;
+    for (int i = 0; i < 1024; i++){
+        b = read_bit(in_fd);
+        printf("%d\n", b);
+        if (b == 2) {
+            break;
+        }
+    }
+}
+
