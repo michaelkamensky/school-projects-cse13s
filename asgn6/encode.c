@@ -4,7 +4,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
+#include "io.h"
+#include "code.h"
+#include "word.h"
+#include "trie.h"
+
+
+
 
 void usage(char *exec) {
     fprintf(stderr,
@@ -21,6 +32,57 @@ void usage(char *exec) {
         "    -h : display program help and usage.\n",
         exec);
 }
+
+int bit_length(uint16_t val) {
+    int i;
+    for (i = 16; i >= 0; i--) {
+        if (val & (1 << i)) {
+            return i + 1;
+        }
+    }
+    return 0;
+}
+
+
+void encode(int infile, int outfile) {
+    TrieNode *root = trie_create();
+    TrieNode *curr_node = root;
+    TrieNode *prev_node = NULL;
+    uint8_t prev_sym = 0;
+    uint8_t curr_sym = 0;
+    uint16_t next_code = START_CODE;
+    bool ret;
+    while (1) {
+        ret = read_sym(infile, &curr_sym);
+        if (!ret) {
+            break;
+        }
+        TrieNode *next_node = trie_step(curr_node, curr_sym);
+        if (next_node != NULL) {
+            prev_node = curr_node;
+            curr_node = next_node;
+        } else {
+            write_pair(outfile, curr_node->code, curr_sym, bit_length(next_code));
+            curr_node->children[curr_sym] = trie_node_create(next_code);
+            curr_node = root;
+            next_code = next_code + 1;
+        }
+        if (next_code == MAX_CODE) {
+            trie_reset(root);
+            curr_node = root;
+            next_code = START_CODE;
+        }
+        prev_sym = curr_sym;
+    }
+    if (curr_node != root) {
+        write_pair(outfile, prev_node->code, prev_sym, bit_length(next_code));
+        next_code = (next_code + 1) % MAX_CODE;
+    }
+    write_pair(outfile, STOP_CODE, 0, bit_length(next_code));
+    flush_pairs(outfile);
+
+}
+
 
 int main(int argc, char **argv) {
     int c;
@@ -42,31 +104,49 @@ int main(int argc, char **argv) {
     }
 
     // open right files
-    FILE *in_file;
+    int in_file;
     if (in_file_name) {
-        in_file = fopen(in_file_name, "r");
-        if (in_file == NULL) {
-            fprintf(stderr, "Can not open %s file\n", in_file_name);
+        in_file = open(in_file_name, O_RDONLY);
+        if (in_file == -1) {
+            fprintf(stderr, "Can not open %s file for reading\n", in_file_name);
             usage(argv[0]);
             exit(-1);
         }
     } else {
-        in_file = stdin;
+        in_file = STDIN_FILENO;
     }
 
-    FILE *out_file;
+    // create and write the header to the outfile
+    struct stat statbuf;
+    FileHeader header;
+    header.magic = MAGIC;
+    fstat(in_file, &statbuf);
+    header.protection = statbuf.st_mode;
+
+    int out_file;
     if (out_file_name) {
-        out_file = fopen(out_file_name, "w");
+        out_file = open(out_file_name, O_WRONLY | O_CREAT | O_TRUNC, statbuf.st_mode);
+        if (out_file == -1) {
+            fprintf(stderr, "Can not open %s file for writing\n", out_file_name);
+            usage(argv[0]);
+            exit(-1);
+        }
     } else {
-        out_file = stdout;
+        out_file = STDOUT_FILENO;
     }
+
+
+    write_header(out_file, &header);
+
+    // encode function
+    encode(in_file, out_file);
 
     // close the right files
     if (out_file_name) {
-        fclose(out_file);
+        close(out_file);
     }
     if (in_file_name) {
-        fclose(in_file);
+        close(in_file);
     }
 
     free(in_file_name);

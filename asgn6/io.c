@@ -85,7 +85,7 @@ bool read_sym(int infile, uint8_t *sym) {
         read_sym_buf_size = read_bytes(infile, sym_buf, BLOCK);
         if (read_sym_buf_size == 0) {
             // end of file
-            return true;
+            return false;
         }
     }
 
@@ -95,7 +95,7 @@ bool read_sym(int infile, uint8_t *sym) {
         sym_current = 0;
         memset( sym_buf, 0, BLOCK);
     }
-    return false;
+    return true;
     
 }
 
@@ -170,6 +170,7 @@ static uint8_t read_bit(int in_fd) {
 
 
 void write_pair(int outfile, uint16_t code, uint8_t sym, int bitlen) {
+    printf("code = %d, sym = %c, bitlen = %d\n", code, sym, bitlen);
     for (int i = 0; i < bitlen; i++) {
         uint8_t b = code & (1 << i);
         if (b != 0) {

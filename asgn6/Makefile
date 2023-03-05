@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -Wall -Wpedantic -Werror -Wextra -g
 CFLAGS += -Wno-error=unused-variable -Wno-error=unused-parameter
 #CFLAGS = -g
-encode_objects = encode.o trie.o
+encode_objects = encode.o trie.o word.o io.o
 decode_objects = decode.o word.o io.o
 
 all: encode decode trie_ut word_ut io_ut
