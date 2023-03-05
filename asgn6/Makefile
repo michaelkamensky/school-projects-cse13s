@@ -39,8 +39,8 @@ word_ut.o: word_ut.c
 word.o: word.c
 	$(CC) $(CFLAGS) -c word.c
 
-io_ut: io_ut.o io.o
-	$(CC) $(CFLAGS) -o $@ io_ut.o io.o
+io_ut: io_ut.o io.o word.o
+	$(CC) $(CFLAGS) -o $@ io_ut.o io.o word.o
 
 io_ut.o: io_ut.c
 	$(CC) $(CFLAGS) -c io_ut.c

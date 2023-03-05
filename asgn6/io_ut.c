@@ -19,6 +19,9 @@ void test_write_words(int outfile) {
     Word *w1 = word_append_sym(w, 6);
     write_word(outfile, w);
     write_word(outfile, w1);
+    write_word(outfile, w);
+    write_word(outfile, w1);
+    flush_words(outfile);
 
 }
 
@@ -61,5 +64,10 @@ int main(void) {
     FileHeader h2;
     read_header(in_file_int, &h2);
     test_read_bit(in_file_int);
+
+    out_file_name = "test_write_words.txt";
+    out_file_int = open(out_file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    test_write_words(out_file_int);
+    close(out_file_int);
     return 0;
 }
