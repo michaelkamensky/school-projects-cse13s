@@ -74,9 +74,52 @@ void read_header(int infile, FileHeader *header) {
         header->protection = swap16(header->protection);
     }
 }
-
 //#undef BLOCK
 //#define BLOCK 2
+
+static uint8_t sym_buf[BLOCK];
+static size_t sym_current;
+static size_t read_sym_buf_size;
+bool read_sym(int infile, uint8_t *sym) {
+    if (sym_current == 0) {
+        read_sym_buf_size = read_bytes(infile, sym_buf, BLOCK);
+        if (read_sym_buf_size == 0) {
+            // end of file
+            return true;
+        }
+    }
+
+    *sym = sym_buf[sym_current];
+    sym_current += 1;
+    if (sym_current == read_sym_buf_size){
+        sym_current = 0;
+        memset( sym_buf, 0, BLOCK);
+    }
+    return false;
+    
+}
+
+static uint8_t word_buf[BLOCK];
+static size_t word_current;
+void write_word(int outfile, Word *w) {
+    for (uint32_t i = 0; i < w->len; i++) {
+        word_buf[word_current] = w->syms[i];
+        word_current += 1;
+        if (word_current == BLOCK) {
+            write_bytes(outfile, word_buf, BLOCK);
+            word_current = 0;
+            memset(word_buf, 0, BLOCK);
+
+        }
+    }
+}
+
+void flush_words(int outfile){
+    write_bytes(outfile, word_buf, word_current);
+    word_current = 0;
+    memset( word_buf, 0, BLOCK);
+
+}
 
 static uint8_t write_buf[BLOCK];
 static size_t write_current_bit;

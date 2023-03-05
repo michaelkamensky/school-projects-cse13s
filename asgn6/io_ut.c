@@ -8,9 +8,19 @@
 
 #include "io.h"
 #include "code.h"
+#include "word.h"
  
 void test_write_bit(int out_fd);
 void test_read_bit(int in_fd);
+
+void test_write_words(int outfile) {
+    uint8_t syms[3] = {3, 99, 6};
+    Word *w = word_create(syms, 3);
+    Word *w1 = word_append_sym(w, 6);
+    write_word(outfile, w);
+    write_word(outfile, w1);
+
+}
 
 int main(void) {
     char *in_file_name = "burger_test.txt";
@@ -20,8 +30,16 @@ int main(void) {
     fstat(in_file_int, &statbuf);
 
     int read_this_bytes = 1000;
-    uint8_t *buf = (uint8_t *) calloc(read_this_bytes, sizeof(uint8_t));
-    int bytes_r = read_bytes(in_file_int, buf, read_this_bytes);
+    //uint8_t *buf = (uint8_t *) calloc(read_this_bytes, sizeof(uint8_t));
+    uint8_t sym;
+    //int bytes_r = read_bytes(in_file_int, buf, read_this_bytes);
+    while (true) {
+        bool res = read_sym(in_file_int, &sym);
+        printf("sym = %c, res = %d\n", sym, res);
+        if(res) {
+            break;
+        }
+    }
     close(in_file_int);
 
     // testing the write capabilities
