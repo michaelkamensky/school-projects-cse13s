@@ -124,7 +124,7 @@ void flush_words(int outfile){
 static uint8_t write_buf[BLOCK];
 static size_t write_current_bit;
 
-static void write_bit(int out_fd, uint8_t b) {
+static inline void write_bit(int out_fd, uint8_t b) {
     size_t byte_addr = write_current_bit / 8;
     int bit_addr = write_current_bit % 8;
     write_buf[byte_addr] = write_buf[byte_addr] | (b << bit_addr);
@@ -140,7 +140,7 @@ static uint8_t read_buf[BLOCK];
 static size_t read_buf_size;
 static size_t read_current_bit;
 
-static uint8_t read_bit(int in_fd) {
+static inline uint8_t read_bit(int in_fd) {
     uint8_t b = 2;
 
     if (read_current_bit == 0) {
