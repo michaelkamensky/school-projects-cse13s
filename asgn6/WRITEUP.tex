@@ -1,0 +1,23 @@
+\documentclass[11pt]{article} % Document type
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fullpage}
+\usepackage{fourier}
+\title{Assignment 6}
+\author{Michael Kamensky}
+\date{\today} % Sets the date to \today, or any date you specify
+\begin{document}\maketitle % Start the document
+\section{What I learned}
+For this assignment I learned:
+\begin{itemize}
+\item How to use the Lempel-Ziv Compression algorithm and how we use a dictionary to record repeating patterns and therefore are able to use a code to reference those patterns and greatly reduce the number of bytes needed to write them out
+\item In LZ78 learned how to avoid writing code dictionary into compressed file; instead, we generate the dictionary on the fly when decompressing
+\item How to read and write a certain number of bytes using a repeated call to read() and write()
+\item How to do the buffered I/O by having a buffer in memory and then writing them only when needed
+\item How to write bits into a file using a buffer and then once the buffer is full write it out to a file
+\item How to use tries, create, navigate, and delete them to create a fast look-up dictionary for my compression 
+\item How to use fstat to get file attributes including permissions and size
+\item How to get the bit length of an integer without using the log function
+\item There are little and big endian CPUs where that have different byte orders and looking through given functions learned to test endianness and how to byte swap
+\end{itemize}
+\end{document}
