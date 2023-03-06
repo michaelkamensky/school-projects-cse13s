@@ -48,9 +48,7 @@ void decode(int infile, int outfile) {
         }
     }
     flush_words(outfile);
-    wt_reset(table);
-    word_delete(table[EMPTY_CODE]);
-    free(table);
+    wt_delete(table);
 }
 
 void usage(char *exec) {

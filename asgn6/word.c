@@ -45,3 +45,9 @@ void wt_reset(WordTable *wt) {
         }
     }
 }
+
+void wt_delete(WordTable *wt) {
+    wt_reset(wt);
+    word_delete(wt[EMPTY_CODE]);
+    free(wt);
+}
