@@ -126,10 +126,10 @@ int main(int argc, char **argv) {
         fstat(in_file, &statbuf_i);
         struct stat statbuf_o;
         fstat(out_file, &statbuf_o);
-        printf("Compressed file size: %lu bytes\n", statbuf_i.st_size);
-        printf("Uncompressed file size: %lu bytes\n", statbuf_o.st_size);
+        fprintf(stderr, "Compressed file size: %lu bytes\n", statbuf_i.st_size);
+        fprintf(stderr, "Uncompressed file size: %lu bytes\n", statbuf_o.st_size);
         double percent = 100 * (1 - ((double) statbuf_i.st_size / (double) statbuf_o.st_size));
-        printf("Compression ratio: %.2f%% \n", percent);
+        fprintf(stderr, "Compression ratio: %.2f%% \n", percent);
     }
     // close the right files
     if (out_file_name) {
