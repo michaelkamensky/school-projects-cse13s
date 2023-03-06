@@ -170,9 +170,9 @@ static uint8_t read_bit(int in_fd) {
 
 
 void write_pair(int outfile, uint16_t code, uint8_t sym, int bitlen) {
-    printf("code = %d, sym = %c, bitlen = %d\n", code, sym, bitlen);
+    // printf("code = %4.4x, sym = %2.2x, bitlen = %d\n", code, sym, bitlen);
     for (int i = 0; i < bitlen; i++) {
-        uint8_t b = code & (1 << i);
+        uint32_t b = code & (1 << i);
         if (b != 0) {
             b = 1;
         }
@@ -217,6 +217,7 @@ bool read_pair(int infile, uint16_t *code, uint8_t *sym, int bitlen) {
     } else {
         return true;
     }
+
 }
 
 void flush_pairs(int outfile) {
@@ -232,9 +233,10 @@ void flush_pairs(int outfile) {
 
 void test_write_bit(int out_fd) {
 #if 1
-    write_pair(out_fd, EMPTY_CODE, 0x74, 2);
+    write_pair(out_fd, 0x101, 0xcb, 9);
 #else
     write_bit(out_fd, 1);
+
     write_bit(out_fd, 0);
 
     write_bit(out_fd, 0);
@@ -250,6 +252,7 @@ void test_write_bit(int out_fd) {
     write_pair(out_fd, EMPTY_CODE, 0x68, 2);
 #else
     write_bit(out_fd, 1);
+
     write_bit(out_fd, 0);
     
     write_bit(out_fd, 0);
@@ -268,6 +271,7 @@ void test_read_bit(int in_fd) {
 #if 0
     uint8_t b;
     for (int i = 0; i < 1024; i++){
+
         b = read_bit(in_fd);
         printf("%d\n", b);
         if (b == 2) {

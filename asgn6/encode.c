@@ -68,7 +68,7 @@ void encode(int infile, int outfile) {
             next_code = next_code + 1;
         }
         if (next_code == MAX_CODE) {
-            trie_reset(root);
+            trie_delete(root);
             curr_node = root;
             next_code = START_CODE;
         }
@@ -80,6 +80,8 @@ void encode(int infile, int outfile) {
     }
     write_pair(outfile, STOP_CODE, 0, bit_length(next_code));
     flush_pairs(outfile);
+    trie_delete(root);
+    trie_node_delete(root);
 
 }
 
@@ -119,6 +121,7 @@ int main(int argc, char **argv) {
     // create and write the header to the outfile
     struct stat statbuf;
     FileHeader header;
+    memset(&header, 0, sizeof(FileHeader));
     header.magic = MAGIC;
     fstat(in_file, &statbuf);
     header.protection = statbuf.st_mode;

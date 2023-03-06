@@ -37,7 +37,7 @@ WordTable *wt_create(void) {
 }
 
 void wt_reset(WordTable *wt) {
-    for (uint32_t i = 2; i < MAX_CODE; i++) {
+    for (uint32_t i = START_CODE; i < MAX_CODE; i++) {
         // check if the position is not null
         if (wt[i] != NULL) {
             // if not null clears the word

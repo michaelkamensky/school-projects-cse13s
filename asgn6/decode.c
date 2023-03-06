@@ -24,12 +24,12 @@ int bit_length(uint16_t val) {
 }
 
 void decode(int infile, int outfile) { 
-    uint16_t curr_code;
-    uint8_t curr_sym;
+    WordTable *table = wt_create();
+    uint8_t curr_sym = 0;
+    uint16_t curr_code = 0;
     uint16_t next_code = START_CODE;
     int bitlen;
     bool ret;
-    WordTable *table = wt_create();
 
     while (1) {
         bitlen = bit_length(next_code);
@@ -43,8 +43,16 @@ void decode(int infile, int outfile) {
         table[next_code] = word_append_sym(table[curr_code], curr_sym);
         write_word(outfile, table[next_code]);
         next_code += 1;
+        if (next_code == MAX_CODE) {
+            wt_reset(table);
+            next_code = START_CODE;
+        }
     }
     flush_words(outfile);
+    wt_reset(table);
+    word_delete(table[EMPTY_CODE]);
+    free(table);
+
 }
 
 void usage(char *exec) {
