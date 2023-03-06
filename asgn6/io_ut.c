@@ -10,8 +10,12 @@
 #include "code.h"
 #include "word.h"
  
-void test_write_bit(int out_fd);
-void test_read_bit(int in_fd);
+void test_write_bit(int out_fd) {
+    write_pair(out_fd, 0x101, 0xcb, 9);
+    write_pair(out_fd, EMPTY_CODE, 0x68, 2);
+    write_pair(out_fd, STOP_CODE, 0, 3);
+}
+
 
 void test_write_words(int outfile) {
     uint8_t syms[3] = {3, 99, 6};
@@ -22,7 +26,27 @@ void test_write_words(int outfile) {
     write_word(outfile, w);
     write_word(outfile, w1);
     flush_words(outfile);
+}
 
+void test_read_bit(int in_fd) {
+    uint16_t code;
+    uint8_t sym;
+    bool ret;
+    ret = read_pair(in_fd, &code, &sym, 2);
+    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    if (!ret) {
+        return;
+    }
+    ret = read_pair(in_fd, &code, &sym, 2);
+    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    if (!ret) {
+        return;
+    }
+    ret = read_pair(in_fd, &code, &sym, 3);
+    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    if (!ret) {
+        return;
+    }
 }
 
 int main(void) {
@@ -32,7 +56,6 @@ int main(void) {
     struct stat statbuf;
     fstat(in_file_int, &statbuf);
 
-    int read_this_bytes = 1000;
     //uint8_t *buf = (uint8_t *) calloc(read_this_bytes, sizeof(uint8_t));
     uint8_t sym;
     //int bytes_r = read_bytes(in_file_int, buf, read_this_bytes);
@@ -48,7 +71,6 @@ int main(void) {
     // testing the write capabilities
     char *out_file_name = "test_write.txt";
     int out_file_int = open(out_file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    int write_this_bytes = 50;
     FileHeader h;
     memset(&h, 0, sizeof(FileHeader));
     h.magic = MAGIC;
