@@ -85,10 +85,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    // if statistics is true then print of the values
-    if (statistics) {
-        // write the stats here
-    }
 
     // open right files
     int in_file;
@@ -126,6 +122,19 @@ int main(int argc, char **argv) {
 
     decode(in_file, out_file);
 
+    // if statistics is true then print of the values
+    if (statistics) {
+        // write the stats here
+        struct stat statbuf_i;
+        fstat(in_file, &statbuf_i);
+        struct stat statbuf_o;
+        fstat(out_file, &statbuf_o);
+        printf("Compressed file size: %lu bytes\n", statbuf_i.st_size);
+        printf("Uncompressed file size: %lu bytes\n", statbuf_o.st_size);
+        double percent = 100 * (1- ((double)statbuf_i.st_size / (double)statbuf_o.st_size));
+        printf("Compression ratio: %.2f%% \n", percent);
+
+    }
     // close the right files
     if (out_file_name) {
         close(out_file);
