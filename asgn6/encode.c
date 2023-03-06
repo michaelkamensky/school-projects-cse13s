@@ -8,14 +8,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-
 #include "io.h"
 #include "code.h"
 #include "word.h"
 #include "trie.h"
-
-
-
 
 void usage(char *exec) {
     fprintf(stderr,
@@ -42,7 +38,6 @@ int bit_length(uint16_t val) {
     }
     return 0;
 }
-
 
 void encode(int infile, int outfile) {
     TrieNode *root = trie_create();
@@ -82,9 +77,7 @@ void encode(int infile, int outfile) {
     flush_pairs(outfile);
     trie_delete(root);
     trie_node_delete(root);
-
 }
-
 
 int main(int argc, char **argv) {
     int c;
@@ -99,7 +92,6 @@ int main(int argc, char **argv) {
         default: usage(argv[0]); exit(-1);
         }
     }
-
 
     // open right files
     int in_file;
@@ -134,7 +126,6 @@ int main(int argc, char **argv) {
         out_file = STDOUT_FILENO;
     }
 
-
     write_header(out_file, &header);
 
     // encode function
@@ -147,7 +138,7 @@ int main(int argc, char **argv) {
         fstat(out_file, &statbuf_o);
         printf("Compressed file size: %lu bytes\n", statbuf_o.st_size);
         printf("Uncompressed file size: %lu bytes\n", statbuf.st_size);
-        double percent = 100 * (1- ((double)statbuf_o.st_size / (double)statbuf.st_size));
+        double percent = 100 * (1 - ((double) statbuf_o.st_size / (double) statbuf.st_size));
         printf("Compression ratio: %.2f%% \n", percent);
     }
 

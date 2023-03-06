@@ -4,7 +4,6 @@
 #include "trie.h"
 #include "code.h"
 
-
 TrieNode *trie_node_create(uint16_t index) {
     TrieNode *trie_node = (TrieNode *) calloc(1, sizeof(TrieNode));
     trie_node->code = index;
@@ -16,7 +15,7 @@ void trie_node_delete(TrieNode *n) {
 }
 
 TrieNode *trie_create(void) {
-    return trie_node_create(EMPTY_CODE); 
+    return trie_node_create(EMPTY_CODE);
 }
 
 void trie_reset(TrieNode *root) {
@@ -28,11 +27,11 @@ void trie_reset(TrieNode *root) {
 
 void trie_delete(TrieNode *n) {
     for (int i = 0; i < ALPHABET; i++) {
-        if ( n->children[i] != NULL) {
+        if (n->children[i] != NULL) {
             trie_delete(n->children[i]);
         }
     }
-    trie_reset(n); 
+    trie_reset(n);
 }
 
 TrieNode *trie_step(TrieNode *n, uint8_t sym) {

@@ -5,7 +5,7 @@
 #include "code.h"
 
 int main(void) {
-    uint8_t syms[3] = {3, 99, 6};
+    uint8_t syms[3] = { 3, 99, 6 };
     Word *w = word_create(syms, 3);
     Word *w1 = word_append_sym(w, 6);
     WordTable *wt = wt_create();

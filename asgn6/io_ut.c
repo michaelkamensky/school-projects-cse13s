@@ -9,16 +9,15 @@
 #include "io.h"
 #include "code.h"
 #include "word.h"
- 
+
 void test_write_bit(int out_fd) {
     write_pair(out_fd, 0x101, 0xcb, 9);
     write_pair(out_fd, EMPTY_CODE, 0x68, 2);
     write_pair(out_fd, STOP_CODE, 0, 3);
 }
 
-
 void test_write_words(int outfile) {
-    uint8_t syms[3] = {3, 99, 6};
+    uint8_t syms[3] = { 3, 99, 6 };
     Word *w = word_create(syms, 3);
     Word *w1 = word_append_sym(w, 6);
     write_word(outfile, w);
@@ -33,17 +32,17 @@ void test_read_bit(int in_fd) {
     uint8_t sym;
     bool ret;
     ret = read_pair(in_fd, &code, &sym, 2);
-    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    printf("ret = %d, code = %x, sym = %x\n", ret, code, sym);
     if (!ret) {
         return;
     }
     ret = read_pair(in_fd, &code, &sym, 2);
-    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    printf("ret = %d, code = %x, sym = %x\n", ret, code, sym);
     if (!ret) {
         return;
     }
     ret = read_pair(in_fd, &code, &sym, 3);
-    printf("ret = %d, code = %x, sym = %x\n",ret, code, sym);
+    printf("ret = %d, code = %x, sym = %x\n", ret, code, sym);
     if (!ret) {
         return;
     }
@@ -62,7 +61,7 @@ int main(void) {
     while (true) {
         bool res = read_sym(in_file_int, &sym);
         printf("sym = %c, res = %d\n", sym, res);
-        if(res) {
+        if (res) {
             break;
         }
     }
@@ -82,7 +81,7 @@ int main(void) {
     close(out_file_int);
 
     in_file_int = open(out_file_name, O_RDONLY);
-    // testing  read_header(int infile, FileHeader *header) 
+    // testing  read_header(int infile, FileHeader *header)
     FileHeader h2;
     read_header(in_file_int, &h2);
     test_read_bit(in_file_int);

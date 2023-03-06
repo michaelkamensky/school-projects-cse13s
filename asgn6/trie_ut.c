@@ -36,5 +36,4 @@ int main(void) {
 
     trie_delete(root);
     trie_node_delete(root);
-
 }

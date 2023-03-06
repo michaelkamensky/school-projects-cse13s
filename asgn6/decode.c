@@ -8,7 +8,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-
 #include "io.h"
 #include "code.h"
 #include "word.h"
@@ -23,7 +22,7 @@ int bit_length(uint16_t val) {
     return 0;
 }
 
-void decode(int infile, int outfile) { 
+void decode(int infile, int outfile) {
     WordTable *table = wt_create();
     uint8_t curr_sym = 0;
     uint16_t curr_code = 0;
@@ -52,7 +51,6 @@ void decode(int infile, int outfile) {
     wt_reset(table);
     word_delete(table[EMPTY_CODE]);
     free(table);
-
 }
 
 void usage(char *exec) {
@@ -84,7 +82,6 @@ int main(int argc, char **argv) {
         default: usage(argv[0]); exit(-1);
         }
     }
-
 
     // open right files
     int in_file;
@@ -131,9 +128,8 @@ int main(int argc, char **argv) {
         fstat(out_file, &statbuf_o);
         printf("Compressed file size: %lu bytes\n", statbuf_i.st_size);
         printf("Uncompressed file size: %lu bytes\n", statbuf_o.st_size);
-        double percent = 100 * (1- ((double)statbuf_i.st_size / (double)statbuf_o.st_size));
+        double percent = 100 * (1 - ((double) statbuf_i.st_size / (double) statbuf_o.st_size));
         printf("Compression ratio: %.2f%% \n", percent);
-
     }
     // close the right files
     if (out_file_name) {
@@ -142,7 +138,6 @@ int main(int argc, char **argv) {
     if (in_file_name) {
         close(in_file);
     }
-
 
     free(in_file_name);
     free(out_file_name);

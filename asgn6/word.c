@@ -19,9 +19,8 @@ Word *word_append_sym(Word *w, uint8_t sym) {
     word->len = w->len + 1;
     word->syms = (uint8_t *) calloc(word->len, sizeof(uint8_t));
     memcpy(word->syms, w->syms, w->len);
-    word->syms[word->len-1] = sym;
+    word->syms[word->len - 1] = sym;
     return word;
-
 }
 
 void word_delete(Word *w) {

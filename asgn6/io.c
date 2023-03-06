@@ -59,15 +59,14 @@ void write_header(int outfile, FileHeader *header) {
     h->protection = header->protection;
 #endif
     if (big_endian()) {
-       h.magic = swap32(h.magic);
-       h.protection = swap32(h.protection);
- 
+        h.magic = swap32(h.magic);
+        h.protection = swap32(h.protection);
     }
-    write_bytes(outfile, (uint8_t *)&h, sizeof(FileHeader)); 
+    write_bytes(outfile, (uint8_t *) &h, sizeof(FileHeader));
 }
 
 void read_header(int infile, FileHeader *header) {
-    read_bytes(infile, (uint8_t *)header, sizeof(FileHeader));
+    read_bytes(infile, (uint8_t *) header, sizeof(FileHeader));
     if (big_endian()) {
         // big endian
         header->magic = swap32(header->magic);
@@ -91,12 +90,11 @@ bool read_sym(int infile, uint8_t *sym) {
 
     *sym = sym_buf[sym_current];
     sym_current += 1;
-    if (sym_current == read_sym_buf_size){
+    if (sym_current == read_sym_buf_size) {
         sym_current = 0;
-        memset( sym_buf, 0, BLOCK);
+        memset(sym_buf, 0, BLOCK);
     }
     return true;
-    
 }
 
 static uint8_t word_buf[BLOCK];
@@ -109,16 +107,14 @@ void write_word(int outfile, Word *w) {
             write_bytes(outfile, word_buf, BLOCK);
             word_current = 0;
             memset(word_buf, 0, BLOCK);
-
         }
     }
 }
 
-void flush_words(int outfile){
+void flush_words(int outfile) {
     write_bytes(outfile, word_buf, word_current);
     word_current = 0;
-    memset( word_buf, 0, BLOCK);
-
+    memset(word_buf, 0, BLOCK);
 }
 
 static uint8_t write_buf[BLOCK];
@@ -132,7 +128,7 @@ static inline void write_bit(int out_fd, uint8_t b) {
     if (write_current_bit == BLOCK * 8) {
         write_bytes(out_fd, write_buf, BLOCK);
         write_current_bit = 0;
-        memset( write_buf, 0, BLOCK);
+        memset(write_buf, 0, BLOCK);
     }
 }
 
@@ -156,7 +152,7 @@ static inline uint8_t read_bit(int in_fd) {
 
     if (byte_addr < read_buf_size) {
         b = read_buf[byte_addr] & (1 << bit_addr);
-        if (b != 0){
+        if (b != 0) {
             b = 1;
         }
         read_current_bit += 1;
@@ -167,7 +163,6 @@ static inline uint8_t read_bit(int in_fd) {
     }
     return b;
 }
-
 
 void write_pair(int outfile, uint16_t code, uint8_t sym, int bitlen) {
     // printf("code = %4.4x, sym = %2.2x, bitlen = %d\n", code, sym, bitlen);
@@ -192,21 +187,21 @@ bool read_pair(int infile, uint16_t *code, uint8_t *sym, int bitlen) {
     uint8_t sym_val = 0;
     for (int i = 0; i < bitlen; i++) {
         uint8_t b = read_bit(infile);
-        if (b == 2){
+        if (b == 2) {
             // should not happen
             return false;
         }
-        if (b == 1){
+        if (b == 1) {
             code_val = code_val | (1 << i);
         }
     }
     for (int i = 0; i < 8; i++) {
         uint8_t b = read_bit(infile);
-        if (b == 2){
+        if (b == 2) {
             // should not happen
             return false;
         }
-        if (b == 1){
+        if (b == 1) {
             sym_val = sym_val | (1 << i);
         }
     }
@@ -217,7 +212,6 @@ bool read_pair(int infile, uint16_t *code, uint8_t *sym, int bitlen) {
     } else {
         return true;
     }
-
 }
 
 void flush_pairs(int outfile) {
@@ -227,5 +221,5 @@ void flush_pairs(int outfile) {
     }
     write_bytes(outfile, write_buf, write_size);
     write_current_bit = 0;
-    memset( write_buf, 0, BLOCK);
+    memset(write_buf, 0, BLOCK);
 }
